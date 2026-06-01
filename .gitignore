@@ -1,0 +1,91 @@
+# =========================
+# IDE & Éditeurs de code
+# =========================
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+bin/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# =========================
+# Fichiers compilés (Java)
+# =========================
+*.class
+*.jar
+*.war
+*.ear
+
+# =========================
+# Outils de build (Java)
+# =========================
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+dependency-reduced-pom.xml
+
+# Gradle
+.gradle/
+build/
+
+# =========================
+# Frontend & Dépendances
+# =========================
+# Si vous utilisez npm pour des librairies ou outils de build web
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Logs et Serveurs Locaux
+# =========================
+*.log
+# Utile si votre HttpServer ou client RMI génère des fichiers de log en local
+logs/
+
+# =========================
+# Variables d'environnement & Secrets
+# =========================
+# Pour éviter de commit des mots de passe de BDD ou d'API proxy
+.env
+.env.local
+.env.*.local
+secret.properties
+credentials.json
+
+# =========================
+# OS & Fichiers Système
+# =========================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
