@@ -1,18 +1,18 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ServiceRestaurantImpl extends UnicastRemoteObject implements ServiceRestaurant {
     
     public ServiceRestaurantImpl() throws RemoteException {
         super();
+        ObjectMapper mapper = new ObjectMapper();
     }
 
     @Override
-    public Restaurant getRestaurantById(String id) throws RemoteException {
+    public String getRestaurantById(String id) throws RemoteException {
         
-        // Implémentation pour récupérer un restaurant par son ID
-        return new Restaurant(id, "Nom du Restaurant", "Coordonnées du Restaurant");
+        return null;
     }
 
     @Override
