@@ -9,7 +9,7 @@ public class Requete {
     private static String dbUser;
     private static String dbPass;
 
-    // Méthode pour nettoyer les valeurs lues (enlever les guillemets et espaces)
+    //netoie les guillemet pour eviter les erreur qui serait du a al completion du fichier config
     private static String cleanValue(String value) {
         if (value == null) return null;
         value = value.trim();
@@ -23,8 +23,7 @@ public class Requete {
 
     static {
         Properties prop = new Properties();
-
-        // 1. Charger les propriétés par défaut depuis config.properties (qui est sur Git)
+        //chargement de la config public (GIT)
         try (InputStream configInput = Requete.class.getClassLoader().getResourceAsStream("RMI/src/database/config.properties")) {
             if (configInput != null) {
                 prop.load(configInput);
@@ -35,16 +34,15 @@ public class Requete {
             System.err.println("Erreur lors de la lecture de config.properties.");
         }
 
-        // 2. Tenter de charger les secrets et d'écraser les valeurs par défaut
-        try (InputStream secretInput = Requete.class.getClassLoader().getResourceAsStream("RMI/src/database/secret.properties")) {
+        //chargement de la config secret (non GIT)
+        try (InputStream secretInput = Requete.class.getClassLoader().getResourceAsStream("RMI/src/database/config.secret.properties")) {
             if (secretInput != null) {
-                prop.load(secretInput); // Les secrets écrasent les valeurs de config
+                prop.load(secretInput);
             }
         } catch (IOException e) {
-            System.err.println("Erreur lors de la lecture de secret.properties.");
+            System.err.println("Erreur lors de la lecture de config.secret.properties.");
         }
 
-        // Nettoyage des valeurs pour éviter les erreurs communes (guillemets dans le fichier properties)
         dbUrl = cleanValue(prop.getProperty("db.url"));
         dbUser = cleanValue(prop.getProperty("db.user"));
         dbPass = cleanValue(prop.getProperty("db.password"));
