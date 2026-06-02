@@ -73,6 +73,7 @@ logs/
 .env.local
 .env.*.local
 config.secret.properties
+*.secret.properties
 credentials.json
 
 # =========================
