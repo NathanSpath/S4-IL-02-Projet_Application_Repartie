@@ -225,7 +225,7 @@ public class Requete {
         return null;
     }
 
-    public Reservation getClientById(String idCli, String idRes) {
+    public Reservation getReservationById(String idCli, String idRes) {
 
         try (Connection conn = getConnection()) {
             System.out.println("Connexion à la base de données réussie !");
