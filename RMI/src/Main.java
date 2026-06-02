@@ -11,11 +11,35 @@ public class Main {
             }
             Restaurant restaurant = requete.getRestaurantById(restaurants[0].getId());
             if (restaurant != null) {
-                System.out.println("Trouvé par ID : " + restaurant.getName());
+                System.out.println("\nTrouvé par ID : " + restaurant.getName());
             }
         } else {
             System.out.println("Aucun restaurant trouvé dans la base de données.");
         }
+
+
+        System.out.println("\n3 restaurants page 1 ");
+        Restaurant[] restaurants1 = requete.getRestaurants("NOM", 0, 3);
+        if (restaurants1 != null && restaurants1.length > 0) {
+            for (Restaurant restaurant : restaurants1) {
+                System.out.println(restaurant.getName());
+            }
+        } else {
+            System.out.println("Aucun restaurant trouvé dans la base de données.");
+        }
+
+        System.out.println("\n3 restaurants page 2 ");
+        Restaurant[] restaurants2 = requete.getRestaurants("NOM", 1, 3);
+        if (restaurants2 != null && restaurants2.length > 0) {
+            for (Restaurant restaurant : restaurants2) {
+                System.out.println(restaurant.getName());
+            }
+        } else {
+            System.out.println("Aucun restaurant trouvé dans la base de données.");
+        }
+
+
+
 
         System.out.println("\n--- Clients ---");
         Client[] clients = requete.getClients();
@@ -25,11 +49,14 @@ public class Main {
             }
             Client client = requete.getClientById(clients[0].getId());
             if (client != null) {
-                System.out.println("Trouvé par ID : " + client.getNom());
+                System.out.println("\nTrouvé par ID : " + client.getNom());
             }
         } else {
             System.out.println("Aucun client trouvé dans la base de données.");
         }
+
+
+
 
         System.out.println("\n--- Réservations ---");
         Reservation[] reservations = requete.getReservations();
@@ -39,7 +66,7 @@ public class Main {
             }
             Reservation reservation = requete.getReservationById(reservations[0].getIdCli(), reservations[0].getIdRes());
             if (reservation != null) {
-                 System.out.println("Trouvé par ID : Client " + reservation.getIdCli() + ", Restaurant " + reservation.getIdRes());
+                 System.out.println("\nTrouvé par ID : Client " + reservation.getIdCli() + ", Restaurant " + reservation.getIdRes());
             }
         } else {
             System.out.println("Aucune réservation trouvée dans la base de données.");

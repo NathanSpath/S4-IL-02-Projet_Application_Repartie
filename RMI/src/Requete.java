@@ -91,6 +91,40 @@ public class Requete {
         return null;
     }
 
+
+    public Restaurant[] getRestaurants( String sort,int pages, int size) {
+        List<Restaurant> restaurantList = new ArrayList<>();
+        try (Connection conn = getConnection()) {
+            String sql = "Select * from E46438U.RMI_RESTAURANTS " +
+                    "ORDER BY ? " +
+                    "OFFSET ? ROWS " +
+                    "FETCH NEXT ? ROWS ONLY";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, sort);
+            pstmt.setInt(2, pages*size);
+            pstmt.setInt(3, size);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                restaurantList.add(new Restaurant(rs.getString("ID"), rs.getString("NOM"), rs.getString("ADRESSE"), rs.getString("COORD")));
+            }
+            rs.close();
+            pstmt.close();
+
+            return restaurantList.toArray(new Restaurant[0]);
+
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la connexion ou de l'exécution de la requête.");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Restaurant[] getRestaurants(int page, int size) {
+        return getRestaurants("NOM", page, size);
+    }
+
+
     public Restaurant getRestaurantById(String id) {
         try (Connection conn = getConnection()) {
             String sql = "Select * from E46438U.RMI_RESTAURANTS where id = ?";
