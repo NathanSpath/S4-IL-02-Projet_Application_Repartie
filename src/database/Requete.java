@@ -11,35 +11,45 @@ public class Requete {
     private static String dbUser;
     private static String dbPass;
 
+    // Méthode pour nettoyer les valeurs lues (enlever les guillemets et espaces)
+    private static String cleanValue(String value) {
+        if (value == null) return null;
+        value = value.trim();
+        if ((value.startsWith("'") && value.endsWith("'")) || (value.startsWith("\"") && value.endsWith("\""))) {
+            if (value.length() >= 2) {
+                value = value.substring(1, value.length() - 1);
+            }
+        }
+        return value;
+    }
+
     static {
         Properties prop = new Properties();
-        try (InputStream secretInput = Requete.class.getClassLoader().getResourceAsStream("database/secret.properties")) {
-            if (secretInput != null) {
-                prop.load(secretInput);
+        
+        // 1. Charger les propriétés par défaut depuis config.properties (qui est sur Git)
+        try (InputStream configInput = Requete.class.getClassLoader().getResourceAsStream("database/config.properties")) {
+            if (configInput != null) {
+                prop.load(configInput);
+            } else {
+                System.err.println("AVERTISSEMENT: Le fichier 'database/config.properties' est introuvable dans le classpath.");
             }
         } catch (IOException e) {
-            System.err.println("Erreur lors de la lecture de secret.properties (ceci est peut-être normal).");
-            e.printStackTrace();
+            System.err.println("Erreur lors de la lecture de config.properties.");
         }
 
-        dbUrl = prop.getProperty("db.url");
-        dbUser = prop.getProperty("db.user");
-        dbPass = prop.getProperty("db.password");
-
-        if (dbUrl == null || dbUser == null || dbPass == null) {
-
-            try (InputStream configInput = Requete.class.getClassLoader().getResourceAsStream("database/config.properties")) {
-                if (configInput == null) {
-                    System.err.println("ERREUR CRITIQUE: Le fichier 'database/config.properties' est introuvable dans le classpath.");
-                } else {
-                    prop.load(configInput);
-                }
-            } catch (IOException e) {
-                System.err.println("Erreur lors de la lecture de config.properties ou secret.properties.");
-                e.printStackTrace();
-
+        // 2. Tenter de charger les secrets et d'écraser les valeurs par défaut
+        try (InputStream secretInput = Requete.class.getClassLoader().getResourceAsStream("database/secret.properties")) {
+            if (secretInput != null) {
+                prop.load(secretInput); // Les secrets écrasent les valeurs de config
             }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture de secret.properties.");
         }
+
+        // Nettoyage des valeurs pour éviter les erreurs communes (guillemets dans le fichier properties)
+        dbUrl = cleanValue(prop.getProperty("db.url"));
+        dbUser = cleanValue(prop.getProperty("db.user"));
+        dbPass = cleanValue(prop.getProperty("db.password"));
     }
 
     /**
@@ -59,14 +69,12 @@ public class Requete {
         return DriverManager.getConnection(dbUrl, dbUser, dbPass);
     }
 
-    /**
-     * Méthode de base où vous pourrez écrire et exécuter vos requêtes.
-     */
+
     public void executerMaRequete() {
         try (Connection conn = getConnection()) {
             System.out.println("Connexion à la base de données réussie !");
 
-            String sql = "Select * from E46438U.RMI_RESTAURANT";
+            String sql = "Select * from E46438U.RMI_RESTAURANTS";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
