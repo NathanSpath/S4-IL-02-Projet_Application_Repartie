@@ -11,7 +11,3 @@ requet qui recupere les resevartion avec *
 requet qui recupere les reservation par idclient et idRestaurant
 requete qui ajoute une reservation
 */
-
-SELECT * FROM RMI_RESTAURANTS;
-select * from RMI_RESTAURANTS
-where id = idrestaurant
