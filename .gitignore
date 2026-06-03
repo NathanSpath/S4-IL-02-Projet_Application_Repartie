@@ -72,7 +72,8 @@ logs/
 .env
 .env.local
 .env.*.local
-secret.properties
+config.secret.properties
+*.secret.properties
 credentials.json
 
 # =========================
