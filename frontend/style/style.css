@@ -1,0 +1,119 @@
+:root {
+    --teal: #335C67;
+    --cream: #FFF3B0;
+    --orange: #e09f3e;
+    --red: #9E2A2B;
+    --burgundy: #540b0e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
+    color: var(--burgundy);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: var(--burgundy);
+    color: var(--cream);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+}
+
+nav a {
+    color: var(--cream);
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+nav a:hover, nav a.active {
+    background-color: var(--orange);
+    color: var(--teal);
+}
+
+main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 320px;
+    background-color: var(--cream);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    overflow-y: auto;
+}
+
+.sidebar h2, .sidebar h3 {
+    color: var(--teal);
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 5px;
+}
+
+.legende-section ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dot {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.velib { background-color: var(--orange); }
+
+.resto { background-color: var(--teal); }
+
+.incident { background-color: var(--red); }
+
+.map-container {
+    flex: 1;
+    padding: 20px;
+    background-color: #e9ecef;
+    display: flex;
+}
+#map {
+     flex: 1;
+    height: 100%;
+    background-color: #d1dadd;
+    border: 3px dashed var(--burgundy);
+    border-radius: 12px;
+    z-index: 1;
+}
