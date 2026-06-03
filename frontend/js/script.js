@@ -13,6 +13,8 @@ const contractName = "nancy";
 const apiKey = "ccff3ae3c87530ebf6054e6b9b2dc66bec0a4fee";
 const urlAPI = `https://api.jcdecaux.com/vls/v1/stations?contract=${contractName}&apiKey=${apiKey}`; 
 
+const urlIncidents = 'http://localhost:8080/api/incidents';
+
 
 fetch(urlAPI).then(response => response.json()).then(data => {
     console.log(data);
@@ -30,5 +32,16 @@ fetch(urlAPI).then(response => response.json()).then(data => {
 }).catch(error => {
     console.error("Erreur lors de la récupération des données :", error);
 });
+
+fetch(urlIncidents).then(response => response.json()).then(data => {
+    console.log("Incidents:");
+    console.log(data);
+    data.forEach(incident => {
+        const marker = L.marker([incident.latitude, incident.longitude]).addTo(map);
+    });
+}).catch(error => {
+    console.error("Erreur lors de la récupération des données :", error);
+});
+
 
 
