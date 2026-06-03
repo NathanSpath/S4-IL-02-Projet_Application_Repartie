@@ -80,4 +80,19 @@ public class OpenData {
         return jsonRestaurant;
     }
 
+    /**
+     * Permet de réserver une table dans un restaurant
+     * @param idRestaurant id du restaurant
+     * @param idClient id du client
+     * @param nbPers nombre de personnes
+     * @return un message de confirmation ou d'erreur
+     * @throws Exception
+     */
+    public String reserverTable(String idRestaurant,String idClient,int nbPers) throws Exception {
+        String url = "rmi://localhost:1099/ServiceRestaurant";
+        ServiceRestaurant service = (ServiceRestaurant) java.rmi.Naming.lookup(url);
+
+        return service.reservation(idRestaurant, idClient, nbPers);
+    }
+
 }

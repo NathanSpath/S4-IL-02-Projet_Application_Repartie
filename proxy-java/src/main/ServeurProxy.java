@@ -2,6 +2,7 @@ package main;
 
 import com.sun.net.httpserver.HttpServer;
 import handlers.IncidentsHandler;
+import handlers.ReservationHandler;
 import handlers.RestaurantHandler;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ public class ServeurProxy {
         // Déclaration des routes (URLs)
         server.createContext("/api/incidents", new IncidentsHandler());
         server.createContext("/api/restaurants", new RestaurantHandler());
+        server.createContext("/api/reservations", new ReservationHandler());
 
         server.setExecutor(null);
         server.start();
