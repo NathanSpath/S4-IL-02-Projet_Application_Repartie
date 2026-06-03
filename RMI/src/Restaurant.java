@@ -13,6 +13,13 @@ public class Restaurant implements Serializable {
         this.coordonnees = coordonnees;
     }
 
+    public Restaurant(String name, String adresse ,String coordonnees) {
+        this.name = name;
+        this.adresse = adresse;
+        this.coordonnees = coordonnees;
+    }
+
+
     public String getId() {
         return id;
     }

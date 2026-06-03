@@ -64,7 +64,7 @@ public class Main {
             for (Reservation reservation : reservations) {
                 System.out.println("ID Client: " + reservation.getIdCli() + ", ID Restaurant: " + reservation.getIdTab());
             }
-            Reservation reservation = requete.getReservationById(reservations[0].getIdCli(), reservations[0].getIdTab());
+            Reservation reservation = requete.getReservationById(reservations[0].getId());
             if (reservation != null) {
                  System.out.println("\nTrouvé par ID : Client " + reservation.getIdCli() + ", Restaurant " + reservation.getIdTab());
             }

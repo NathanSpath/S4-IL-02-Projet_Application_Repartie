@@ -26,10 +26,10 @@ public class ServiceRestaurantImpl extends UnicastRemoteObject implements Servic
     }
 
     @Override
-    public String creerReservation(String idTab, String idClient, int nbPersonnes) throws RemoteException {
+    public String creerReservation(String idTab, String idClient, int nbPersonnes, double duree) throws RemoteException {
         Requete requete = new Requete();
         ObjectMapper mapper = new ObjectMapper();
-        Reservation r = new Reservation(idClient, idTab, nbPersonnes);
+        Reservation r = new Reservation(idClient, idTab, nbPersonnes,duree);
         boolean success = false;
         try {
             success = requete.addReservation(r);

@@ -19,7 +19,9 @@ public class LancerServiceRestaurant {
             System.out.println("Service restaurant démarré et enregistré auprès du Central.");
             System.out.println("Détails du restaurant (Test local) :");
             System.out.println(sr.getRestaurants());
-            System.out.println(sr.creerReservation("5356ED08A4E80A22E06338AAD6C21047","5356ED08A4EB0A22E06338AAD6C21047",2));
+            System.out.println(sr.creerReservation("5359E3C5751F4174E06338AAD6C2F9AA","5359E3C575224174E06338AAD6C2F9AA",2,2));
+            System.out.println(sr.creerReservation("5359E3C575204174E06338AAD6C2F9AA","5359E3C575224174E06338AAD6C2F9AA",8,2));
+            System.out.println(sr.creerReservation("5359E3C575204174E06338AAD6C2F9AA","5359E3C575224174E06338AAD6C2F9AA",4,2));
             
         } catch (Exception e) {
             System.err.println("Erreur critique lors du lancement du service restaurant:");

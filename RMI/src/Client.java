@@ -11,6 +11,12 @@ public class Client {
         this.numTel = numTel;
     }
 
+    public Client(String nom, String prenom, String numTel) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.numTel = numTel;
+    }
+
     public String getId() {
         return id;
     }
