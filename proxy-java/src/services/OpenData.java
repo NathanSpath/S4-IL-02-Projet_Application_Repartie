@@ -24,10 +24,17 @@ public class OpenData {
      * Constructeur qui configure le client HTTP pour utiliser le proxy
      */
     public OpenData() {
+        // Version SANS proxy (pour tester chez soi)
+        this.client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+
+        /* // Version AVEC proxy (à décommenter quand tu seras sur les PC de l'IUT)
         this.client = HttpClient.newBuilder()
                 .proxy(ProxySelector.of(new InetSocketAddress("www-cache", 3128)))
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
+        */
     }
 
     /**
