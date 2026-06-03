@@ -2,8 +2,7 @@ package main;
 
 import com.sun.net.httpserver.HttpServer;
 import handlers.IncidentsHandler;
-// import handlers.VelibsHandler;
-// import handlers.RestaurantsHandler;
+import handlers.RestaurantHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -16,10 +15,7 @@ public class ServeurProxy {
 
         // Déclaration des routes (URLs)
         server.createContext("/api/incidents", new IncidentsHandler());
-
-        // Celles que tu ajouteras plus tard :
-        // server.createContext("/api/velibs", new VelibsHandler());
-        // server.createContext("/api/restaurants", new RestaurantsHandler());
+        server.createContext("/api/restaurants", new RestaurantHandler());
 
         server.setExecutor(null);
         server.start();

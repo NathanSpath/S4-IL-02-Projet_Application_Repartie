@@ -36,7 +36,7 @@ public class OpenData {
      * @throws Exception
      */
     public String getIncidents() throws Exception {
-        String url = "A REMPLIR";
+        String url = "https://carto.g-ny.eu/data/cifs/cifs_waze_v2.json";
 
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -63,6 +63,21 @@ public class OpenData {
             return filterData.toString();
         }
         throw new Exception("Erreur API Incidents : " + response.statusCode());
+    }
+
+    /**
+     * Retourne la liste des restaurants dans la métropole de Nancy
+     * @return la liste des restaurants
+     * @throws Exception
+     */
+    public String getRestaurants() throws Exception {
+        String url = "rmi://localhost:1099/ServiceRestaurant";
+
+        ServiceRestaurant service = (ServiceRestaurant) java.rmi.Naming.lookup(url);
+
+        String jsonRestaurant = service.getRestaurant();
+
+        return jsonRestaurant;
     }
 
 }
