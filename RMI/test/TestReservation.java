@@ -34,7 +34,7 @@ public class TestReservation {
         System.out.println("Tentative de création de la première réservation...");
         // Réservation de 2h maintenant
         Reservation resa1 = new Reservation(idClient, idTable, 2, 2.0); 
-        boolean succes1 = requete.addReservation(resa1);
+        boolean succes1 = requete.addReservation(resa1)!= null;
         
         assertTrue(succes1, "La première réservation aurait dû réussir (sauf si une existe déjà à cette heure exacte !)");
         if(succes1) {
@@ -45,7 +45,7 @@ public class TestReservation {
         System.out.println("Tentative de création d'une réservation en conflit...");
         // Réservation de 1h, aussi maintenant, sur la MÊME table
         Reservation resaConflit = new Reservation(idClient, idTable, 4, 1.0); 
-        boolean succes2 = requete.addReservation(resaConflit);
+        boolean succes2 = requete.addReservation(resaConflit)!=null;
         
         // La deuxième devrait échouer à cause de votre logique de conflit
         assertFalse(succes2, "La deuxième réservation aurait dû être bloquée (conflit d'horaire)");

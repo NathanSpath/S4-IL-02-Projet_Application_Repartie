@@ -22,4 +22,5 @@ interface ServiceRestaurant extends Remote {
 
     String getReservations(String nom, String prenom, int numTel) throws  RemoteException;
 
+    String getTables() throws RemoteException;
 }

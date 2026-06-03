@@ -17,7 +17,7 @@ public class TestClient {
         System.out.println("=== TEST : Création et lecture d'un client ===");
         
         // 1. Création d'un client de test
-        Client nouveauClient = new Client("Test", "0600000000","0123456789");
+        Client nouveauClient = new Client("Test", "Test","0123456789");
         Client clientSauvegarde = requete.addClient(nouveauClient);
 
         // Vérifier que l'ID a bien été généré et retourné
@@ -32,9 +32,9 @@ public class TestClient {
         
         // Vérifier que c'est bien le même
         assertNotNull(clientLu, "Le client lu en base ne doit pas être null");
-        assertEquals("Unit", clientLu.getNom(), "Le nom doit correspondre");
+        assertEquals("Test", clientLu.getNom(), "Le nom doit correspondre");
         assertEquals("Test", clientLu.getPrenom(), "Le prénom doit correspondre");
-        assertEquals("0600000000", clientLu.getNumTel(), "Le numéro de téléphone doit correspondre");
+        assertEquals("0123456789", clientLu.getNumTel(), "Le numéro de téléphone doit correspondre");
     }
 
     @Test
