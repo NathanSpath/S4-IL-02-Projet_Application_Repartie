@@ -27,4 +27,7 @@ public class Table {
         return nbPlaces;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 }

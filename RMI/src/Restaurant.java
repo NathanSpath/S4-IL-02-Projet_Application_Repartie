@@ -34,4 +34,7 @@ public class Restaurant implements Serializable {
 
     public String getAdresse() { return adresse;}
 
+    public void setId(String id) {
+        this.id = id;
+    }
 }

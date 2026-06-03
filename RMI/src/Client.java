@@ -33,4 +33,7 @@ public class Client {
         return numTel;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 }
