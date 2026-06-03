@@ -227,18 +227,20 @@ public class Requete {
         return  null;
     }
 
-    public void addReservation(Reservation reservation) {
+    public boolean addReservation(Reservation reservation) {
         try (Connection conn = getConnection()) {
             String sql = "INSERT INTO E46438U.RMI_RESERVATION (IDCLI, IDRES, NBCONVIVES) VALUES (?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, reservation.getIdCli());
             pstmt.setString(2, reservation.getIdRes());
             pstmt.setInt(3, reservation.getNbConvives());
-            pstmt.executeUpdate();
+            int rows = pstmt.executeUpdate();
             pstmt.close();
+            return rows > 0;
         } catch (SQLException e) {
             System.err.println("Erreur lors de la connexion ou de l'exécution de la requête.");
             e.printStackTrace();
+            return false;
         }
     }
     //endregion

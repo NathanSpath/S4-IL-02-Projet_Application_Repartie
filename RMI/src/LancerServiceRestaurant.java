@@ -11,6 +11,8 @@ public class LancerServiceRestaurant {
             central.enregistrerClient(sr);
             
             System.out.println("Service restaurant démarré et enregistré auprès du Central.");
+            System.out.println("Demande restaurant");
+            System.out.println(sr.getRestaurant());
         } catch (Exception e) {
             e.printStackTrace();
         }
