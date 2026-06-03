@@ -203,6 +203,28 @@ public class Requete {
         return null;
     }
 
+    public String getIdClient(String nom, String prenom, int numTel){
+        try(Connection conn = getConnection()){
+            String sql = "Select ID FROM E46438U.RMI_CLIENT where NOM = ? and PRENOM = ? and NUMTEL = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1,nom);
+            pstmt.setString(2,prenom);
+            pstmt.setInt(3,numTel);
+            ResultSet rs = pstmt.executeQuery();
+            String idClient = "";
+            if(rs.next()){
+                idClient=rs.getString("ID");
+            }
+            rs.close();
+            pstmt.close();
+            return  idClient;
+        }catch (SQLException e) {
+            System.err.println("Erreur lors de la connexion ou de l'exécution de la requête.");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void addClient(Client client) {
         try (Connection conn = getConnection()) {
             String sql = "INSERT INTO E46438U.RMI_CLIENT (NOM, PRENOM, NUMTEL) VALUES (?, ?, ?)";
@@ -295,13 +317,31 @@ public class Requete {
         return null;
     }
 
-    public Reservation getReservationById(String idCli, String idTab) {
+    public Reservation[] getReservationByClient(String idCli) {
+        List<Reservation> reservationList = new ArrayList<>();
         try (Connection conn = getConnection()) {
-            String sql = "Select * from E46438U.RMI_RESERVATION where IDCLI = ? and IDTAB = ?";
+            String sql = "Select * from E46438U.RMI_RESERVATION where IDCLI = ? ";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, idCli);
-            pstmt.setString(2, idTab);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                reservationList.add(new Reservation(rs.getString("ID"), rs.getString("IDCLI"), rs.getString("IDTAB"), rs.getInt("NBCONVIVES"), rs.getDate("DATERESERVATION")));
+            }
+            rs.close();
+            pstmt.close();
+            return reservationList.toArray(new Reservation[0]);
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la connexion ou de l'exécution de la requête.");
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    public Reservation getReservationById(String idReservation) {
+        try (Connection conn = getConnection()) {
+            String sql = "Select * from E46438U.RMI_RESERVATION where ID = ? ";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, idReservation);
             ResultSet rs = pstmt.executeQuery();
             Reservation reservation = null;
             if (rs.next()) {

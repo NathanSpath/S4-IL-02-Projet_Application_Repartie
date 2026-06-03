@@ -6,7 +6,7 @@ public class Reservation {
     private String idCli;
     private String idTab;
     private int nbConvives;
-    private Date dateReservation;
+    private Date dateReservation;*
 
     /**
      * Constructeur pour créer une NOUVELLE réservation avant de l'insérer en BDD.

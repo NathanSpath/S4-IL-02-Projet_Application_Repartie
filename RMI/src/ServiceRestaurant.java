@@ -8,7 +8,7 @@ interface ServiceRestaurant extends Remote {
      * @return Une chaîne JSON représentant l'objet Restaurant.
      * @throws RemoteException
      */
-    String getRestaurantDetails() throws RemoteException;
+    String getRestaurants() throws RemoteException;
 
     /**
 
@@ -20,5 +20,6 @@ interface ServiceRestaurant extends Remote {
      */
     String creerReservation(String idTab, String idCli, int nbPers) throws RemoteException;
 
-    boolean getRestaurant();
+    String getReservations(String nom, String prenom, int numTel) throws  RemoteException;
+
 }
