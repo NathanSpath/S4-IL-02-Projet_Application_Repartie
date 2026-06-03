@@ -62,11 +62,11 @@ public class Main {
         Reservation[] reservations = requete.getReservations();
         if (reservations != null && reservations.length > 0) {
             for (Reservation reservation : reservations) {
-                System.out.println("ID Client: " + reservation.getIdCli() + ", ID Restaurant: " + reservation.getIdRes());
+                System.out.println("ID Client: " + reservation.getIdCli() + ", ID Restaurant: " + reservation.getIdTab());
             }
-            Reservation reservation = requete.getReservationById(reservations[0].getIdCli(), reservations[0].getIdRes());
+            Reservation reservation = requete.getReservationById(reservations[0].getIdCli(), reservations[0].getIdTab());
             if (reservation != null) {
-                 System.out.println("\nTrouvé par ID : Client " + reservation.getIdCli() + ", Restaurant " + reservation.getIdRes());
+                 System.out.println("\nTrouvé par ID : Client " + reservation.getIdCli() + ", Restaurant " + reservation.getIdTab());
             }
         } else {
             System.out.println("Aucune réservation trouvée dans la base de données.");
