@@ -63,7 +63,24 @@ public class OpenData {
                 filteredIncident.put("date_debut", incident.optString("starttime"));
                 filteredIncident.put("date_fin", incident.optString("endtime"));
                 filteredIncident.put("rue", location.optString("street"));
-                filteredIncident.put("coordonnees", location.optString("polyline"));
+
+                String polyline = location.optString("polyline", "");
+                if (!polyline.isEmpty()) {
+                    String[] coordonnees = polyline.split(" ");
+
+                    if (coordonnees.length == 2) {
+                        try {
+                            double latitude = Double.parseDouble(coordonnees[0]);
+                            double longitude = Double.parseDouble(coordonnees[1]);
+
+                            filteredIncident.put("latitude", latitude);
+                            filteredIncident.put("longitude", longitude);
+
+                        } catch (NumberFormatException e) {
+                            System.err.println("Erreur de conversion des coordonnées pour la rue : " + location.optString("street"));
+                        }
+                    }
+                }
 
                 filterData.put(filteredIncident);
             }
