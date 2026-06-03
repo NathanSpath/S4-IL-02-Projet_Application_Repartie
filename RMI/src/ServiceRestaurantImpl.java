@@ -5,39 +5,51 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ServiceRestaurantImpl extends UnicastRemoteObject implements ServiceRestaurant {
-    
-    public ServiceRestaurantImpl() throws RemoteException {
+
+    private final Restaurant restaurant;
+
+    public ServiceRestaurantImpl(Restaurant restaurant) throws RemoteException {
         super();
+        this.restaurant = restaurant;
     }
 
     @Override
-    public String getRestaurant() throws RemoteException {
-        // Implémentation pour récupérer la liste des restaurants
-        Requete requete = new Requete();
+    public String getRestaurantDetails() throws RemoteException {
         ObjectMapper mapper = new ObjectMapper();
-        Restaurant[] listeResto = requete.getRestaurants();
         String jsonResult = "";
         try {
-            jsonResult = mapper.writeValueAsString(listeResto);
+            jsonResult = mapper.writeValueAsString(this.restaurant);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            System.err.println("Erreur de sérialisation JSON: " + e.getMessage());
+            return "{\"error\":\"Erreur interne lors de la récupération des détails.\"}";
         }
         return jsonResult;
     }
 
     @Override
-    public String reservation(String restaurantId, String idClient,int nbPersonnes) throws RemoteException {
+    public String creerReservation(String idTab, String idClient, int nbPersonnes) throws RemoteException {
         Requete requete = new Requete();
         ObjectMapper mapper = new ObjectMapper();
-        Reservation r = new Reservation(restaurantId, idClient,nbPersonnes);
-        Boolean result = requete.addReservation(r);
-        String jsonResult = "";
-        try{
-            jsonResult = mapper.writeValueAsString(result);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        Reservation r = new Reservation(idClient, idTab, nbPersonnes);
+        boolean success = false;
+        try {
+            requete.addReservation(r); 
+            success = true;
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la réservation: " + e.getMessage());
+            success = false;
         }
+        String jsonResult = "false";
+        try {
+            jsonResult = mapper.writeValueAsString(success);
+        } catch (JsonProcessingException e) {
+             System.err.println("Erreur de sérialisation JSON du résultat de réservation: " + e.getMessage());
+        }
+        return jsonResult;
+    }
 
-        return jsonResult; // Retourne true si la réservation est réussie, sinon false
+    @Override
+    public boolean getRestaurant() {
+        return false;
     }
 }
