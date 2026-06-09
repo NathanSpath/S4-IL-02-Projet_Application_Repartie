@@ -2,6 +2,7 @@ package RMI.service;
 
 import RMI.dao.Requete;
 import RMI.model.Restaurant;
+import RMI.model.Table;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -20,6 +21,11 @@ public class RestaurantService {
 
     public Restaurant getRestaurantById(String id) {
         return requete.getRestaurantById(id);
+    }
+
+    // Nouvelle méthode pour récupérer toutes les tables
+    public Table[] getTables() {
+        return requete.getTables();
     }
 
     /**

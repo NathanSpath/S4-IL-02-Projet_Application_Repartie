@@ -2,84 +2,99 @@ package RMI.rmi;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 
-import RMI.dao.Requete;
+import RMI.model.Client;
 import RMI.model.Reservation;
 import RMI.model.Restaurant;
 import RMI.model.Table;
+import RMI.service.ClientService;
+import RMI.service.RestaurantService;
+import RMI.service.ReservationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ServiceRestaurantImpl extends UnicastRemoteObject implements ServiceRestaurant {
+    private final ClientService clientService;
+    private final RestaurantService restaurantService;
+    private final ReservationService reservationService;
 
-    public ServiceRestaurantImpl() throws RemoteException {
+    public ServiceRestaurantImpl(ClientService clientService, RestaurantService restaurantService, ReservationService reservationService) throws RemoteException {
         super();
+        this.clientService = clientService;
+        this.restaurantService = restaurantService;
+        this.reservationService = reservationService;
     }
 
     @Override
     public String getRestaurants() throws RemoteException {
-        Requete requete = new Requete();
-        Restaurant[] restaurants = requete.getRestaurants();
         ObjectMapper mapper = new ObjectMapper();
-        String jsonResult = "false";
+        String jsonResult;
         try {
+            Restaurant[] restaurants = restaurantService.getAllRestaurants();
             jsonResult = mapper.writeValueAsString(restaurants);
         } catch (JsonProcessingException e) {
-            System.err.println("Erreur de sérialisation JSON: " + e.getMessage());
-            return "{\"error\":\"Erreur interne lors de la récupération des détails.\"}";
+            System.err.println("Erreur de sérialisation JSON des restaurants: " + e.getMessage());
+            throw new RemoteException("Erreur interne lors de la récupération des détails.", e);
         }
         return jsonResult;
     }
 
     @Override
     public String creerReservation(String idTab, String idClient, int nbPersonnes, double duree) throws RemoteException {
-        Requete requete = new Requete();
         ObjectMapper mapper = new ObjectMapper();
-        Reservation r = new Reservation(idClient, idTab, nbPersonnes,duree);
-        boolean success = false;
+        Reservation r = new Reservation(idClient, idTab, nbPersonnes, duree);
+        boolean success;
         try {
-            success = requete.addReservation(r) != null;
-        } catch (Exception e) {
-            System.err.println("Erreur lors de la réservation: " + e.getMessage());
+            success = reservationService.addReservation(r) != null;
+        } catch (SQLException e) {
+            System.err.println("Erreur BDD ou métier lors de la réservation: " + e.getMessage());
+            throw new RemoteException("Échec de la réservation: " + e.getMessage(), e);
         }
-        String jsonResult = "false";
+        String jsonResult;
         try {
             jsonResult = mapper.writeValueAsString(success);
         } catch (JsonProcessingException e) {
             System.err.println("Erreur de sérialisation JSON du résultat de réservation: " + e.getMessage());
+            throw new RemoteException("Erreur interne lors de la sérialisation du résultat.", e);
         }
         return jsonResult;
     }
 
     @Override
     public String getReservations(String nom, String prenom, int numTel) throws RemoteException {
-        Requete requete = new Requete();
-        Reservation[] reservations = requete.getReservationByClient(requete.getIdClient(nom, prenom, numTel));
         ObjectMapper mapper = new ObjectMapper();
-        String jsonResult = "false";
+        String jsonResult;
         try {
+            String clientId = null;
+            Client[] clients = clientService.getClient(nom, prenom, String.valueOf(numTel));
+            if (clients != null && clients.length > 0) {
+                clientId = clients[0].getId();
+            } else {
+                return mapper.writeValueAsString(new Reservation[0]);
+            }
+
+            Reservation[] reservations = reservationService.getReservationByClient(clientId);
             jsonResult = mapper.writeValueAsString(reservations);
+
         } catch (JsonProcessingException e) {
-            System.err.println("Erreur de sérialisation JSON: " + e.getMessage());
-            return "{\"error\":\"Erreur interne lors de la récupération des détails.\"}";
+            System.err.println("Erreur de sérialisation JSON des réservations: " + e.getMessage());
+            throw new RemoteException("Erreur interne lors de la récupération des détails.", e);
         }
         return jsonResult;
     }
 
     @Override
-    public String getTables() throws RemoteException{
-        Requete requete = new Requete();
-        Table[] tables = requete.getTables();
+    public String getTables() throws RemoteException {
         ObjectMapper mapper = new ObjectMapper();
-        String jsonResult = "false";
+        String jsonResult;
         try {
+            Table[] tables = restaurantService.getTables();
             jsonResult = mapper.writeValueAsString(tables);
         } catch (JsonProcessingException e) {
-            System.err.println("Erreur de sérialisation JSON: " + e.getMessage());
-            return "{\"error\":\"Erreur interne lors de la récupération des détails.\"}";
+            System.err.println("Erreur de sérialisation JSON des tables: " + e.getMessage());
+            throw new RemoteException("Erreur interne lors de la récupération des détails.", e);
         }
         return jsonResult;
     }
-
-
 }

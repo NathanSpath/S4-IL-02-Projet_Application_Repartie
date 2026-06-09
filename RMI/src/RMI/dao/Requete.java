@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -78,11 +79,44 @@ public class Requete {
             while (rs.next()) {
                 restaurantList.add(new Restaurant(rs.getString("ID"), rs.getString("NOM"), rs.getString("ADRESSE"), rs.getString("COORD")));
             }
-            return restaurantList.toArray(new Restaurant[0]);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new Restaurant[0];
+        return restaurantList.toArray(new Restaurant[0]);
+    }
+
+    public Restaurant[] getRestaurants(String sort, int pages, int size) {
+        List<Restaurant> restaurantList = new ArrayList<>();
+
+        List<String> sortCollumnName = Arrays.asList("ID", "NOM", "ADRESSE"); // liste des trie possible
+        String sortColumn = "NOM";
+        if (sort != null && sortCollumnName.contains(sort.toUpperCase())) {
+            sortColumn = sort.toUpperCase();
+        }
+
+        //on construit la requet dynamiquement en utilisant les sort disponnible dans la lsite des chanmps predefini;
+        String sql = String.format("SELECT * FROM E46438U.RMI_RESTAURANTS ORDER BY %s OFFSET ? ROWS FETCH NEXT ? ROWS ONLY", sortColumn);
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, pages * size);
+            pstmt.setInt(2, size);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    restaurantList.add(new Restaurant(rs.getString("ID"), rs.getString("NOM"), rs.getString("ADRESSE"), rs.getString("COORD")));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la connexion ou de l'exécution de la requête.");
+            e.printStackTrace();
+        }
+        return restaurantList.toArray(new Restaurant[0]);
+    }
+
+    public Restaurant[] getRestaurants(int page, int size) {
+        return getRestaurants("NOM", page, size);
     }
 
     public Restaurant getRestaurantById(Connection conn, String id) throws SQLException {
@@ -133,11 +167,30 @@ public class Requete {
             while (rs.next()) {
                 clientList.add(new Client(rs.getString("ID"), rs.getString("NOM"), rs.getString("PRENOM"), rs.getString("NUMTEL")));
             }
-            return clientList.toArray(new Client[0]);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new Client[0];
+        return clientList.toArray(new Client[0]);
+    }
+
+    public Client getClient(String nom, String prenom,  int numTel) {
+        Client client = null;
+        String sql = "SELECT * FROM E46438U.RMI_CLIENT WHERE NOM = ? AND PRENOM = ? AND NUMTEL = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, nom);
+            pstmt.setString(2, prenom);
+            pstmt.setInt(3, numTel);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    client=new Client(rs.getString("ID"), rs.getString("NOM"), rs.getString("PRENOM"), rs.getString("NUMTEL"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return client;
     }
 
     public Client getClientById(Connection conn, String id) throws SQLException {
@@ -178,6 +231,23 @@ public class Requete {
     //endregion
 
     //region Table
+
+    public Table[] getTables(){
+        List<Table> tableList = new ArrayList<>();
+        String sql = "SELECT * FROM E46438U.RMI_TABLE";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                tableList.add(new Table(rs.getString("ID"), rs.getString("IDRES"), rs.getString("NUMTABLE"), rs.getInt("NBPLACES")));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tableList.toArray(new Table[0]);
+    }
     public Table getTableById(Connection conn, String id) throws SQLException {
         String sql = "SELECT * FROM E46438U.RMI_TABLE WHERE id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -213,7 +283,7 @@ public class Requete {
         }
         return table;
     }
-    //endregion
+//endregion
 
     //region Reservation
     public Reservation[] getReservations() {
@@ -295,5 +365,7 @@ public class Requete {
         }
         return reservation;
     }
-    //endregion
+
+
+//endregion
 }

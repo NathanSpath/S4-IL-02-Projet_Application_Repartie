@@ -1,5 +1,7 @@
 package RMI.rmi;
 
+import RMI.service.ReservationService;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
