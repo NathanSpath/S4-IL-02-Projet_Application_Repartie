@@ -1,3 +1,5 @@
+import RMI.dao.Requete;
+import RMI.model.Restaurant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +27,7 @@ public class TestRestaurant {
         assertNotNull(restoSauvegarde.getId(), "L'ID du restaurant doit avoir été généré");
         
         String idGenere = restoSauvegarde.getId();
-        System.out.println("Restaurant créé avec succès (ID: " + idGenere + ")");
+        System.out.println("RMI.model.Restaurant créé avec succès (ID: " + idGenere + ")");
 
         // 2. Lecture du restaurant par son ID
         Restaurant restoLu = requete.getRestaurantById(idGenere);

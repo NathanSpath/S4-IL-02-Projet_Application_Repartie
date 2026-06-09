@@ -1,3 +1,10 @@
+package RMI.dao;
+
+import RMI.model.Client;
+import RMI.model.Reservation;
+import RMI.model.Restaurant;
+import RMI.model.Table;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
@@ -60,18 +67,21 @@ public class Requete {
      * @throws SQLException Si une erreur de connexion survient
      */
     public static Connection getConnection() throws SQLException {
+        Connection conn = null;
         try {
             Class.forName("oracle.jdbc.OracleDriver");
+            conn = DriverManager.getConnection(dbUrl, dbUser, dbPass);
+            conn.setAutoCommit(false);
         } catch (ClassNotFoundException e) {
             System.err.println("Le driver JDBC Oracle n'a pas été trouvé. Avez-vous ajouté ojdbc.jar à vos dépendances ?");
             e.printStackTrace();
             throw new SQLException("Driver Oracle non trouvé", e);
         }
-        return DriverManager.getConnection(dbUrl, dbUser, dbPass);
+        return conn;
     }
     //endregion
 
-    //region requête Restaurant
+    //region requête RMI.model.Restaurant
     public Restaurant[] getRestaurants() {
         List<Restaurant> restaurantList = new ArrayList<>();
         try (Connection conn = getConnection()) {
@@ -169,7 +179,7 @@ public class Requete {
     }
     //endregion
 
-    //region requête Client
+    //region requête RMI.model.Client
     public Client[] getClients() {
         List<Client> clientList = new ArrayList<>();
         try (Connection conn = getConnection()) {
@@ -256,7 +266,7 @@ public class Requete {
     }
     //endregion
 
-    //region requête Table
+    //region requête RMI.model.Table
     public Table[] getTables() {
         List<Table> tableList = new ArrayList<>();
         try (Connection conn = getConnection()) {
@@ -318,7 +328,7 @@ public class Requete {
 
     //endregion
 
-    //region requête Reservation
+    //region requête RMI.model.Reservation
     public Reservation[] getReservations() {
         List<Reservation> reservationList = new ArrayList<>();
         try (Connection conn = getConnection()) {

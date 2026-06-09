@@ -1,5 +1,6 @@
+package RMI.model;
+
 import java.util.Date;
-import java.util.UUID;
 
 public class Reservation {
     private String id;

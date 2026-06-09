@@ -1,6 +1,9 @@
+import RMI.model.Client;
+import RMI.dao.Requete;
+import RMI.model.Reservation;
+import RMI.model.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,7 +47,7 @@ public class TestReservation {
         // 3. Deuxième réservation en conflit (sur la même table, au même moment)
         System.out.println("Tentative de création d'une réservation en conflit...");
         // Réservation de 1h, aussi maintenant, sur la MÊME table
-        Reservation resaConflit = new Reservation(idClient, idTable, 4, 1.0); 
+        Reservation resaConflit = new Reservation(idClient, idTable, 4, 1.0);
         boolean succes2 = requete.addReservation(resaConflit)!=null;
         
         // La deuxième devrait échouer à cause de votre logique de conflit

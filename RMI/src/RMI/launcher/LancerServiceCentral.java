@@ -1,3 +1,7 @@
+package RMI.launcher;
+
+import RMI.rmi.ServiceCentral;
+
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -13,7 +17,7 @@ public class LancerServiceCentral {
             }
 
             ServiceCentral central = new ServiceCentral();
-            reg.rebind("ServiceCentral", central);
+            reg.rebind("RMI.rmi.ServiceCentral", central);
 
             System.out.println("Service Central prêt et enregistré dans le Registry.");
         } catch (Exception e) {

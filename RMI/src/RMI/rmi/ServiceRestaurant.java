@@ -1,11 +1,13 @@
+package RMI.rmi;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-interface ServiceRestaurant extends Remote {
+public interface ServiceRestaurant extends Remote {
 
     /**
      * Récupère les informations détaillées du restaurant (nom, adresse, etc.).
-     * @return Une chaîne JSON représentant l'objet Restaurant.
+     * @return Une chaîne JSON représentant l'objet RMI.model.Restaurant.
      * @throws RemoteException
      */
     String getRestaurants() throws RemoteException;

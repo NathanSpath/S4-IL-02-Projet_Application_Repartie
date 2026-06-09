@@ -1,3 +1,5 @@
+package RMI.model;
+
 public class Client {
     private String id;
     private String nom;

@@ -1,3 +1,5 @@
+package RMI.model;
+
 import java.io.Serializable;
 
 public class Restaurant implements Serializable {

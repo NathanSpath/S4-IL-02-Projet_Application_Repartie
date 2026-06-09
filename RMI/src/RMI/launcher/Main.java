@@ -1,3 +1,10 @@
+package RMI.launcher;
+
+import RMI.model.Client;
+import RMI.dao.Requete;
+import RMI.model.Reservation;
+import RMI.model.Restaurant;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -62,11 +69,11 @@ public class Main {
         Reservation[] reservations = requete.getReservations();
         if (reservations != null && reservations.length > 0) {
             for (Reservation reservation : reservations) {
-                System.out.println("ID Client: " + reservation.getIdCli() + ", ID Restaurant: " + reservation.getIdTab());
+                System.out.println("ID RMI.model.Client: " + reservation.getIdCli() + ", ID RMI.model.Restaurant: " + reservation.getIdTab());
             }
             Reservation reservation = requete.getReservationById(reservations[0].getId());
             if (reservation != null) {
-                 System.out.println("\nTrouvé par ID : Client " + reservation.getIdCli() + ", Restaurant " + reservation.getIdTab());
+                 System.out.println("\nTrouvé par ID : RMI.model.Client " + reservation.getIdCli() + ", RMI.model.Restaurant " + reservation.getIdTab());
             }
         } else {
             System.out.println("Aucune réservation trouvée dans la base de données.");

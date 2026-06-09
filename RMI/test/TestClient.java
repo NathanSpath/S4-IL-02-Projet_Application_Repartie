@@ -1,3 +1,5 @@
+import RMI.model.Client;
+import RMI.dao.Requete;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +27,7 @@ public class TestClient {
         assertNotNull(clientSauvegarde.getId(), "L'ID du client doit avoir été généré");
         
         String idGenere = clientSauvegarde.getId();
-        System.out.println("Client créé avec succès (ID: " + idGenere + ")");
+        System.out.println("RMI.model.Client créé avec succès (ID: " + idGenere + ")");
 
         // 2. Lecture du client par son ID
         Client clientLu = requete.getClientById(idGenere);

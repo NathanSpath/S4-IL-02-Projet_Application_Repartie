@@ -1,6 +1,12 @@
+package RMI.rmi;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import RMI.dao.Requete;
+import RMI.model.Reservation;
+import RMI.model.Restaurant;
+import RMI.model.Table;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

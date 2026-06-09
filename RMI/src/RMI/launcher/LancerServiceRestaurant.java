@@ -1,5 +1,8 @@
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
+package RMI.launcher;
+
+import RMI.rmi.ServiceDistributeur;
+import RMI.rmi.ServiceRestaurant;
+import RMI.rmi.ServiceRestaurantImpl;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -8,14 +11,14 @@ public class LancerServiceRestaurant {
     public static void main(String[] args) {
         // Vérification des arguments
         if (args.length < 1) {
-            System.err.println("Usage: java LancerServiceRestaurant <ip_serveur_central>");
+            System.err.println("Usage: java RMI.launcher.LancerServiceRestaurant <ip_serveur_central>");
             return;
         }
         String ipCentral = args[0];
 
         try {
             Registry reg = LocateRegistry.getRegistry(ipCentral, 1099);
-            ServiceDistributeur central = (ServiceDistributeur) reg.lookup("ServiceCentral");
+            ServiceDistributeur central = (ServiceDistributeur) reg.lookup("RMI.rmi.ServiceCentral");
             ServiceRestaurant sr = new ServiceRestaurantImpl();
 
             central.enregistrerClient(sr);

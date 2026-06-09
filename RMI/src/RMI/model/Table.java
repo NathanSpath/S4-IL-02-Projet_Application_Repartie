@@ -1,3 +1,5 @@
+package RMI.model;
+
 public class Table {
     private String id;
     private String idRes;
