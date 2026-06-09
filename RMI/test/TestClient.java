@@ -3,6 +3,8 @@ import RMI.dao.Requete;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestClient {
@@ -15,12 +17,12 @@ public class TestClient {
     }
 
     @Test
-    public void testCreationEtLectureClient() {
+    public void testCreationEtLectureClient() throws SQLException {
         System.out.println("=== TEST : Création et lecture d'un client ===");
         
         // 1. Création d'un client de test
         Client nouveauClient = new Client("Test", "Test","0123456789");
-        Client clientSauvegarde = requete.addClient(nouveauClient);
+        Client clientSauvegarde = requete.addClient(Requete.getConnection(),nouveauClient);
 
         // Vérifier que l'ID a bien été généré et retourné
         assertNotNull(clientSauvegarde, "Le client retourné ne doit pas être null");

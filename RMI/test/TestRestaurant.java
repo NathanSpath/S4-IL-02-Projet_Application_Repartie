@@ -3,6 +3,8 @@ import RMI.model.Restaurant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestRestaurant {
@@ -15,12 +17,12 @@ public class TestRestaurant {
     }
 
     @Test
-    public void testCreationEtLectureRestaurant() {
+    public void testCreationEtLectureRestaurant() throws SQLException {
         System.out.println("=== TEST : Création et lecture d'un restaurant ===");
         
         // 1. Création d'un restaurant de test
         Restaurant nouveauResto = new Restaurant("Resto Test unitaire", "123 Rue du Test", "48.0, 6.0");
-        Restaurant restoSauvegarde = requete.addRestaurant(nouveauResto);
+        Restaurant restoSauvegarde = requete.addRestaurant(Requete.getConnection(),nouveauResto);
 
         // Vérifier que l'ID a bien été généré et retourné
         assertNotNull(restoSauvegarde, "Le restaurant retourné ne doit pas être null");
