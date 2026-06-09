@@ -67,9 +67,9 @@ public class ServiceRestaurantImpl extends UnicastRemoteObject implements Servic
         String jsonResult;
         try {
             String clientId = null;
-            Client[] clients = clientService.getClient(nom, prenom, String.valueOf(numTel));
-            if (clients != null && clients.length > 0) {
-                clientId = clients[0].getId();
+            Client client = clientService.getClient(nom, prenom, numTel);
+            if (client != null) {
+                clientId = client.getId();
             } else {
                 return mapper.writeValueAsString(new Reservation[0]);
             }
