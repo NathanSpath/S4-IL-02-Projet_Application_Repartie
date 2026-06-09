@@ -12,6 +12,5 @@ public class Main {
         ClientService clientService = new ClientService(requete);
         RestaurantService restaurantService = new RestaurantService(requete);
         ReservationService reservationService = new ReservationService(requete);
-
     }
 }

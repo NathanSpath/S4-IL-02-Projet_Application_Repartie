@@ -4,7 +4,7 @@ public class Client {
     private String id;
     private String nom;
     private String prenom;
-    private String numTel;
+    private String  numTel;
 
     public Client(String id, String nom, String prenom, String numTel) {
         this.id = id;

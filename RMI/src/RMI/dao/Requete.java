@@ -173,7 +173,7 @@ public class Requete {
         return clientList.toArray(new Client[0]);
     }
 
-    public Client getClient(String nom, String prenom,  int numTel) {
+    public Client getClient(String nom, String prenom,  String numTel) {
         Client client = null;
         String sql = "SELECT * FROM E46438U.RMI_CLIENT WHERE NOM = ? AND PRENOM = ? AND NUMTEL = ?";
         try (Connection conn = getConnection();
@@ -181,7 +181,7 @@ public class Requete {
 
             pstmt.setString(1, nom);
             pstmt.setString(2, prenom);
-            pstmt.setInt(3, numTel);
+            pstmt.setString(3, numTel);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     client=new Client(rs.getString("ID"), rs.getString("NOM"), rs.getString("PRENOM"), rs.getString("NUMTEL"));
@@ -350,17 +350,40 @@ public class Requete {
     }
 
     public Reservation addReservation(Connection conn, Reservation reservation) throws SQLException {
+        // 1. Calculer les heures de début et de fin de la nouvelle réservation
+        Timestamp debutNouvelle = new Timestamp(reservation.getDateReservation().getTime());
+        Timestamp finNouvelle = new Timestamp(debutNouvelle.getTime() + (long) (reservation.getDuree() * 3600 * 1000));
+        
+        // Un conflit existe si une réservation pour la même table se termine après le début de la nouvelle et commence avant la fin de la nouvelle.
+        String checkSql = "SELECT COUNT(*) FROM E46438U.RMI_RESERVATION " +
+                          "WHERE IDTAB = ? " +
+                          "AND (DATERESERVATION + NUMTODSINTERVAL(DUREE, 'HOUR')) > ? " +
+                          "AND DATERESERVATION < ?";
+
+        try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
+            checkPstmt.setString(1, reservation.getIdTab());
+            checkPstmt.setTimestamp(2, debutNouvelle);
+            checkPstmt.setTimestamp(3, finNouvelle);
+
+            try (ResultSet rs = checkPstmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return null; // Conflit détecté
+                }
+            }
+        }
+
+        // 3. Si aucun conflit, insérer la réservation
         String generatedId = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase().substring(0, 16);
         reservation.setId(generatedId);
 
-        String sql = "INSERT INTO E46438U.RMI_RESERVATION (ID, IDCLI, IDTAB, NBCONVIVES, DUREE, DATERESERVATION) VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        String insertSql = "INSERT INTO E46438U.RMI_RESERVATION (ID, IDCLI, IDTAB, NBCONVIVES, DUREE, DATERESERVATION) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
             pstmt.setString(1, reservation.getId());
             pstmt.setString(2, reservation.getIdCli());
             pstmt.setString(3, reservation.getIdTab());
             pstmt.setInt(4, reservation.getNbConvives());
             pstmt.setDouble(5, reservation.getDuree());
-            pstmt.setTimestamp(6, new java.sql.Timestamp(reservation.getDateReservation().getTime()));
+            pstmt.setTimestamp(6, debutNouvelle);
             pstmt.executeUpdate();
         }
         return reservation;

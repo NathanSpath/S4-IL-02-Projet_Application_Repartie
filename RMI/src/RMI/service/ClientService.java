@@ -23,7 +23,7 @@ public class ClientService {
     }
 
     // Nouvelle méthode pour récupérer un client par nom, prénom et numéro de téléphone
-    public Client getClient(String nom, String prenom, int numTel) {
+    public Client getClient(String nom, String prenom, String numTel) {
         return requete.getClient(nom, prenom, numTel);
     }
 

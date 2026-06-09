@@ -11,7 +11,7 @@ public class Reservation {
     private double duree;//en heure
 
     /**
-     * Constructeur pour créer une NOUVELLE réservation avant de l'insérer en BDD.
+     * Constructeur pour créer une NOUVELLE réservation a la date now()avant de l'insérer en BDD.
      * L'ID sera généré automatiquement.
      */
     public Reservation(String idCli, String idTab, int nbConvives, double duree) {
@@ -21,6 +21,18 @@ public class Reservation {
         this.nbConvives = nbConvives;
         this.duree = duree;
         this.dateReservation = new Date();
+    }
+    /**
+     * Constructeur pour créer une NOUVELLE réservation a une date precise avant de l'insérer en BDD.
+     * L'ID sera généré automatiquement.
+     */
+    public Reservation(String idCli, String idTab, int nbConvives, double duree,Date dateReservation) {
+        this.id = null;
+        this.idCli = idCli;
+        this.idTab = idTab;
+        this.nbConvives = nbConvives;
+        this.duree = duree;
+        this.dateReservation = dateReservation;
     }
 
     /**

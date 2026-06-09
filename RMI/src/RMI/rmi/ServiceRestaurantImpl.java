@@ -62,7 +62,7 @@ public class ServiceRestaurantImpl extends UnicastRemoteObject implements Servic
     }
 
     @Override
-    public String getReservations(String nom, String prenom, int numTel) throws RemoteException {
+    public String getReservations(String nom, String prenom, String numTel) throws RemoteException {
         ObjectMapper mapper = new ObjectMapper();
         String jsonResult;
         try {
