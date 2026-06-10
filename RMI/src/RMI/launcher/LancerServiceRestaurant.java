@@ -17,7 +17,7 @@ public class LancerServiceRestaurant {
             return;
         }
         String serviceName = args[0];
-        String ipCentral = args[1];
+        String ipCentral = args[0];
 
         try {
             Requete requeteDAO = new Requete();
@@ -27,15 +27,6 @@ public class LancerServiceRestaurant {
 
             ServiceRestaurantImpl serviceRestaurant = new ServiceRestaurantImpl(clientService, restaurantService, reservationService);
 
-            Registry localRegistry;
-            try {
-                localRegistry = LocateRegistry.getRegistry(1099);
-                localRegistry.list();
-            } catch (Exception e) {
-                localRegistry = LocateRegistry.createRegistry(1099);
-            }
-            localRegistry.rebind(serviceName, serviceRestaurant);
-            System.out.println("Service '" + serviceName + "' prêt et enregistré dans le registre RMI local.");
 
             System.out.println("Recherche du service central à l'adresse : " + ipCentral);
             Registry centralRegistry = LocateRegistry.getRegistry(ipCentral, 1099);
