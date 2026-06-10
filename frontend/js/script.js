@@ -37,9 +37,13 @@ const urlIncidents = 'http://localhost:8080/api/incidents';
 const urlReservation = 'http://localhost:8080/api/reservations';
 const formulaire = document.querySelector('#booking-form');
 
+const velibGroup = L.layerGroup().addTo(map);
+const restoGroup = L.layerGroup().addTo(map);
+const incidentGroup = L.layerGroup().addTo(map);
+
 fetch(urlAPI).then(response => response.json()).then(data => {
     data.forEach(station => {
-        const marker = L.marker([station.position.lat, station.position.lng], {icon: velibIcon}).addTo(map);
+        const marker = L.marker([station.position.lat, station.position.lng], {icon: velibIcon}).addTo(velibGroup);
         const popupContent = `
             <b>${station.name}</b><br>
             Adresse: ${station.address}<br>
@@ -55,7 +59,7 @@ fetch(urlAPI).then(response => response.json()).then(data => {
 
 fetch(urlIncidents).then(response => response.json()).then(data => {
     data.forEach(incident => {
-        const marker = L.marker([incident.latitude, incident.longitude], {icon: incidentIcon}).addTo(map);
+        const marker = L.marker([incident.latitude, incident.longitude], {icon: incidentIcon}).addTo(incidentGroup);
 
         if(incident.cause) {
             marker.bindPopup(`<b>Incident:</b> ${incident.cause}`);
@@ -72,7 +76,7 @@ fetch(urlRestaurants).then(response => response.json()).then(data => {
             const lat = parseFloat(coords[0].trim());
             const lng = parseFloat(coords[1].trim());
 
-            const marker = L.marker([lat, lng], {icon: restaurantIcon}).addTo(map);
+            const marker = L.marker([lat, lng], {icon: restaurantIcon}).addTo(restoGroup);
 
             const popupContent = `
                     <b>${restaurant.name}</b><br>
@@ -83,6 +87,30 @@ fetch(urlRestaurants).then(response => response.json()).then(data => {
     });
 }).catch(error => {
     console.error("Erreur lors de la récupération des restaurants :", error);
+});
+
+document.getElementById('velibCheckbox').addEventListener('change', function(e) {
+    if (e.target.checked) {
+        map.addLayer(velibGroup);
+    } else {
+        map.removeLayer(velibGroup);
+    }
+});
+
+document.getElementById('incidentCheckbox').addEventListener('change', function(e) {
+    if (e.target.checked) {
+        map.addLayer(incidentGroup);
+    } else {
+        map.removeLayer(incidentGroup);
+    }
+});
+
+document.getElementById('restoCheckbox').addEventListener('change', function(e) {
+    if (e.target.checked) {
+        map.addLayer(restoGroup);
+    } else {
+        map.removeLayer(restoGroup);
+    }
 });
 
 form.addEventListener('submit', function(event) {
