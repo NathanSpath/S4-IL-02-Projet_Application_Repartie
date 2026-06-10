@@ -118,6 +118,34 @@ main {
     z-index: 1;
 }
 
+.booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.booking-form input {
+    padding: 10px;
+    border: 1px solid var(--burgundy);
+    border-radius: 5px;
+    background-color: white;
+    color: var(--burgundy);
+}
+
+.btn-reserver {
+    background-color: var(--burgundy);
+    color: var(--cream);
+    border: none;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-reserver:hover {
+    background-color: var(--teal);
 .compte-rendu-container {
     padding: 30px;
     background-color: #f4f4f4;
@@ -262,4 +290,5 @@ main {
     overflow-x: auto;
     margin: 15px 0;
     line-height: 1.4;
+}
 }

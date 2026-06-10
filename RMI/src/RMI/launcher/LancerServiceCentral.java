@@ -17,7 +17,7 @@ public class LancerServiceCentral {
             }
 
             ServiceCentral central = new ServiceCentral();
-            reg.rebind("RMI.rmi.ServiceCentral", central);
+            reg.rebind("ServiceCentral", central);
 
             System.out.println("Service Central prêt et enregistré dans le Registry.");
         } catch (Exception e) {
