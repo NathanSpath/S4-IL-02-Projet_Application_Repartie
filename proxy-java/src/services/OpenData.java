@@ -17,6 +17,8 @@ import com.sun.net.httpserver.HttpServer;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+import RMI.rmi.ServiceRestaurant;
+
 public class OpenData {
     private HttpClient client;
 
@@ -99,7 +101,7 @@ public class OpenData {
 
         ServiceRestaurant service = (ServiceRestaurant) java.rmi.Naming.lookup(url);
 
-        String jsonRestaurant = service.getRestaurant();
+        String jsonRestaurant = service.getRestaurants();
 
         return jsonRestaurant;
     }
@@ -116,7 +118,7 @@ public class OpenData {
         String url = "rmi://localhost:1099/ServiceRestaurant";
         ServiceRestaurant service = (ServiceRestaurant) java.rmi.Naming.lookup(url);
 
-        return service.reservation(idRestaurant, idClient, nbPers);
+        return service.creerReservation(idRestaurant, idClient, nbPers,2);
     }
 
 }

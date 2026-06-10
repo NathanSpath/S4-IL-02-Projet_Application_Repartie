@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compte Rendu</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style/style.css" />
+</head>
+
+<div class="compte-rendu-container">
+
+    <div class="cr-header">
+        <h1>Rapport d'Architecture Logicielle — SAÉ Application Répartie</h1>
+        <div class="cr-meta">
+            <span><strong>Groupe :</strong> BUT2 RA-IL1</span>
+            <span><strong>Membres de l'équipe :</strong> SPATH Nathan, VINCENT Julien, MARCHAL Enzo, JACQUET Arthur, CABOT Matthieu</span>
+        </div>
+    </div>
+
+    <div class="cr-section">
+        <h2>1. Architecture Générale du Système</h2>
+        <p>
+            Notre application repose sur une architecture multiniveau (N-Tier) distribuée permettant de collecter, centraliser et afficher de manière homogène des données de la métropole de Nancy. Les échanges s'articulent autour d'un client léger (navigateur), d'un serveur Proxy intermédiaire gérant les restrictions réseaux (CORS) et d'un écosystème d'objets distants distribués via RMI (Remote Method Invocation) connectés à une base de données relationnelle.
+        </p>
+        
+        <div class="architecture-box">
+            <pre class="mermaid" style="width: 100%; display: block;">
+graph TD
+    subgraph Client [Navigateur Web / Frontend]
+        HTML[index.html / style.css]
+        JS[script.js - Leaflet.js]
+    end
+
+    subgraph API_Externe [APIs Publiques Externes]
+        JCDecaux[API JCDecaux Vélos]
+        Waze[API Waze Grand Nancy]
+    end
+
+    subgraph Middleware [Serveur Proxy Java - HttpServer]
+        ProxyMain[ServeurProxy :8080]
+        HandlerInc[IncidentsHandler]
+        HandlerRest[RestaurantHandler]
+        HandlerRes[ReservationHandler]
+        OpenData[OpenData Client HTTP]
+    end
+
+    subgraph Backend [Système Réparti RMI]
+        Registry[RMI Registry :1099]
+        Central[LancerServiceCentral]
+        RestoService[LancerServiceRestaurant]
+        JDBC[Requete DAO]
+    end
+
+    subgraph Data [Stockage]
+        Oracle[(BDD Oracle Infodb)]
+    end
+
+    JS -->|Requête Directe HTTPS| JCDecaux
+    JS -->|Requête HTTP /api/incidents| HandlerInc
+    JS -->|Requête HTTP /api/restaurants| HandlerRest
+    JS -->|Requête HTTP /api/reservations| HandlerRes
+    
+    HandlerInc --> OpenData
+    HandlerRest --> OpenData
+    HandlerRes --> OpenData
+
+    OpenData -->|Requête HTTPS avec/sans cache| Waze
+    OpenData -->|Lookup & Invocation RMI| RestoService
+    RestoService -->|Enregistrement RMI| Central
+    RestoService -->|JDBC Thin Connection| Oracle
+            </pre>
+        </div>
+
+        <div class="tech-tags">
+            <span class="tech-badge">Java RMI</span>
+            <span class="tech-badge">HttpServer</span>
+            <span class="tech-badge network">HTTP/HTTPS</span>
+            <span class="tech-badge network">CORS Bypass</span>
+            <span class="tech-badge db">JDBC Thin</span>
+            <span class="tech-badge db">Oracle SQL</span>
+            <span class="tech-badge web">Leaflet.js</span>
+            <span class="tech-badge web">JSON</span>
+        </div>
+    </div>
+
+    <div class="cr-section">
+        <h2>2. État d'Avancement du Projet</h2>
+        
+        <h3>Ce qui a été réalisé et validé :</h3>
+        <ul class="cr-list">
+            <li><strong>Base de données relationnelle :</strong> Conception et implémentation du schéma relationnel complet sous Oracle (Tables des restaurants, des tables physiques, des clients et des réservations avec clés étrangères et intégrité référentielle en cascade). Un jeu de données représentatif positionné sur Nancy a été injecté.</li>
+            <li><strong>Infrastructure RMI :</strong> Mise en place du Serveur Central faisant office de distributeur et d'annuaire, couplé à l'implémentation dynamique du service de gestion des restaurants (récupération sérialisée en JSON via Jackson et algorithme natif de détection automatique des conflits temporels lors des réservations).</li>
+            <li><strong>Serveur Proxy (HttpServer) :</strong> Établissement complet des points d'accès (endpoints) HTTP pour encapsuler les appels. Le proxy résout de manière transparente les requêtes d'incidents routiers en interrogeant les flux OpenData du Grand Nancy via HttpClient, tout en gérant de façon adaptative le cache de l'IUT.</li>
+            <li><strong>Cartographie Client :</strong> Initialisation de la carte Leaflet.js centrée sur Nancy avec affichage temps réel, icônes et popups détaillés pour l'ensemble des stations VélOstan'lib (via appel direct HTTPS JCDecaux) et des incidents routiers (via tunnel proxy).</li>
+        </ul>
+
+        <h3>Fonctionnalités à venir :</h3>
+        <p>A implémenter dans le rapport</p>
+    </div>
+
+    <div class="cr-section">
+        <h2>3. Guide de Déploiement et d'Exécution</h2>
+        <p>
+            Pour déployer et exécuter l'application sur les machines de l'IUT ou dans un environnement Linux local, veuillez suivre rigoureusement les étapes d'instanciation ordonnées ci-dessous :
+        </p>
+
+        <h3>Étape 1 : Initialisation de la base de données</h3>
+        <p>Exécutez le script SQL d'initialisation sur la base de données Oracle de l'IUT afin de structurer les tables et d'accorder les privilèges d'accès requis :</p>
+        <div class="code-block">
+sqlplus e54916u/MotDePasse@charlemagne.iutnc.univ-lorraine.fr:1521/infodb @RMI/sql/setup.sql
+        </div>
+
+        <h3>Étape 2 : Lancement de l'infrastructure RMI</h3>
+        <p>Démarrez d'abord le registre RMI et le service centralisé de distribution sur la machine hôte principale :</p>
+        <div class="code-block">
+java RMI.launcher.LancerServiceCentral
+        </div>
+        <p>Sur la même machine ou sur une machine distincte du réseau, démarrez le service de gestion de restaurant en lui fournissant l'adresse IP du serveur centralisé :</p>
+        <div class="code-block">
+java RMI.launcher.LancerServiceRestaurant &lt;IP_SERVEUR_CENTRAL&gt;
+        </div>
+
+        <h3>Étape 3 : Lancement du Serveur Proxy HTTP</h3>
+        <p>Compilez et démarrez le serveur proxy Java qui va ouvrir le port d'écoute 8080 et lier les différents gestionnaires de requêtes (Handlers) :</p>
+        <div class="code-block">
+java main.ServeurProxy
+        </div>
+
+        <h3>Étape 4 : Hébergement du client web</h3>
+        <p>A implémenter dans le rapport</p>
+    </div>
+
+    <div class="cr-section">
+        <h2>4. Analyse Critique et Sécurité : Le Contournement du CORS</h2>
+        <p>
+            Dans le cadre de cette SAÉ, nous avons configuré notre serveur proxy pour injecter explicitement l'en-tête de contrôle d'accès <strong>"Access-Control-Allow-Origin: *"</strong> lors du traitement des requêtes HTTP entrantes provenant du navigateur.
+        </p>
+        <p>
+            <strong>Est-ce une pratique responsable ?</strong>
+        </p>
+        <p>
+            D'un point de vue de la sécurité informatique, l'utilisation de la directive joker <code>*</code> n'est pas idéale en environnement de production, bien qu'elle s'avère pratique en phase de développement local. En configurant l'origine sur <code>*</code>, la protection SOP (Same-Origin Policy) du navigateur est assouplie. Une approche de développement sécurisée consisterait à restreindre cet en-tête en remplaçant l'étoile par l'URL exacte du serveur web autorisé à consommer ces API.
+        </p>
+    </div>
+
+    <div class="cr-section">
+        <h2>5. Références et Code Source</h2>
+        <p>L'intégralité de nos codes sources Java (RMI et Proxy), scripts SQL de configuration, ainsi que l'interface utilisateur web sont versionnés et accessibles publiquement sur notre dépôt de développement :</p>
+        <a href="https://github.com/NathanSpath/S4-IL-02-Projet_Application_Repartie.git" target="_blank" class="cr-git-link">Accéder au Dépôt GitHub du Projet</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'forest' });
+    </script>
+</div>
