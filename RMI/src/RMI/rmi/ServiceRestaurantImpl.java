@@ -37,6 +37,7 @@ public class ServiceRestaurantImpl extends UnicastRemoteObject implements Servic
             System.err.println("Erreur de sérialisation JSON des restaurants: " + e.getMessage());
             throw new RemoteException("Erreur interne lors de la récupération des détails.", e);
         }
+        System.out.println("Restaurants récupérés et sérialisés en JSON: " + jsonResult);
         return jsonResult;
     }
 

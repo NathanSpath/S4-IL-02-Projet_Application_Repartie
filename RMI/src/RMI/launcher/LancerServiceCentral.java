@@ -13,7 +13,7 @@ public class LancerServiceCentral {
             try {
                 reg = LocateRegistry.createRegistry(1099);
             } catch (RemoteException e) {
-                reg = LocateRegistry.getRegistry(1099); 
+                reg = LocateRegistry.getRegistry(1099);
             }
 
             ServiceCentral central = new ServiceCentral();
