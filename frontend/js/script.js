@@ -7,7 +7,32 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+const blueIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
 
+const yellowIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+const redIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
 
 const contractName = "nancy";
 const apiKey = "ccff3ae3c87530ebf6054e6b9b2dc66bec0a4fee";
@@ -18,9 +43,8 @@ const urlIncidents = 'http://localhost:8080/api/incidents';
 
 
 fetch(urlAPI).then(response => response.json()).then(data => {
-    console.log(data);
     data.forEach(station => {
-        const marker = L.marker([station.position.lat, station.position.lng]).addTo(map);
+        const marker = L.marker([station.position.lat, station.position.lng], {icon: yellowIcon}).addTo(map);
         const popupContent = `
             <b>${station.name}</b><br>
             Adresse: ${station.address}<br>
@@ -31,31 +55,37 @@ fetch(urlAPI).then(response => response.json()).then(data => {
         marker.bindPopup(popupContent);
     });
 }).catch(error => {
-    console.error("Erreur lors de la récupération des données :", error);
+    console.error("Erreur lors de la récupération des données vélos :", error);
 });
 
 fetch(urlIncidents).then(response => response.json()).then(data => {
-    console.log("Incidents:");
-    console.log(data);
     data.forEach(incident => {
-        const marker = L.marker([incident.latitude, incident.longitude]).addTo(map);
+        const marker = L.marker([incident.latitude, incident.longitude], {icon: redIcon}).addTo(map);
+
+        if(incident.cause) {
+            marker.bindPopup(`<b>Incident:</b> ${incident.cause}`);
+        }
     });
 }).catch(error => {
-    console.error("Erreur lors de la récupération des données :", error);
+    console.error("Erreur lors de la récupération des incidents :", error);
 });
 
 fetch(urlRestaurants).then(response => response.json()).then(data => {
-    console.log("Restaurants:");
-    console.log(data);
     data.forEach(restaurant => {
-        const marker = L.marker([restaurant.latitude, restaurant.longitude]).addTo(map);
-        const popupContent = `
-            <b>${restaurant.name}</b><br>
-            Adresse: ${restaurant.address}<br>
-        `;
-        marker.bindPopup(popupContent);
+        if (restaurant.coordonnees) {
+            const coords = restaurant.coordonnees.split(',');
+            const lat = parseFloat(coords[0].trim());
+            const lng = parseFloat(coords[1].trim());
+
+            const marker = L.marker([lat, lng], {icon: blueIcon}).addTo(map);
+
+            const popupContent = `
+                    <b>${restaurant.name}</b><br>
+                    Adresse: ${restaurant.adresse}<br>
+                `;
+            marker.bindPopup(popupContent);
+        }
     });
 }).catch(error => {
-    console.error("Erreur lors de la récupération des données :", error);
+    console.error("Erreur lors de la récupération des restaurants :", error);
 });
-
