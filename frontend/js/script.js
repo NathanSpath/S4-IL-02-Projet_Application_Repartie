@@ -71,6 +71,26 @@ fetch(urlIncidents).then(response => response.json()).then(data => {
     console.error("Erreur lors de la récupération des incidents :", error);
 });
 
+fetch(urlRestaurants).then(response => response.json()).then(data => {
+    data.forEach(restaurant => {
+        if (restaurant.coordonnees) {
+            const coords = restaurant.coordonnees.split(',');
+            const lat = parseFloat(coords[0].trim());
+            const lng = parseFloat(coords[1].trim());
+
+            const marker = L.marker([lat, lng], {icon: blueIcon}).addTo(map);
+
+            const popupContent = `
+                    <b>${restaurant.name}</b><br>
+                    Adresse: ${restaurant.adresse}<br>
+                `;
+            marker.bindPopup(popupContent);
+        }
+    });
+}).catch(error => {
+    console.error("Erreur lors de la récupération des restaurants :", error);
+});
+
 form.addEventListener('submit', function(event) {
     const formData = new FormData(formulaire);
 
@@ -91,24 +111,4 @@ form.addEventListener('submit', function(event) {
         .catch(error => {
             console.error('Erreur lors de la réservation :', error);
         });
-
-    fetch(urlRestaurants).then(response => response.json()).then(data => {
-        data.forEach(restaurant => {
-            if (restaurant.coordonnees) {
-                const coords = restaurant.coordonnees.split(',');
-                const lat = parseFloat(coords[0].trim());
-                const lng = parseFloat(coords[1].trim());
-
-                const marker = L.marker([lat, lng], {icon: blueIcon}).addTo(map);
-
-                const popupContent = `
-                    <b>${restaurant.name}</b><br>
-                    Adresse: ${restaurant.adresse}<br>
-                `;
-                marker.bindPopup(popupContent);
-            }
-        });
-    }).catch(error => {
-        console.error("Erreur lors de la récupération des restaurants :", error);
-    });
 });
