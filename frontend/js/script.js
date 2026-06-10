@@ -14,7 +14,8 @@ const apiKey = "ccff3ae3c87530ebf6054e6b9b2dc66bec0a4fee";
 const urlAPI = `https://api.jcdecaux.com/vls/v1/stations?contract=${contractName}&apiKey=${apiKey}`; 
 
 const urlIncidents = 'http://localhost:8080/api/incidents';
-
+const urlReservation = 'http://localhost:8080/api/reservations';
+const formulaire = document.querySelector('#booking-form');
 
 fetch(urlAPI).then(response => response.json()).then(data => {
     console.log(data);
@@ -43,5 +44,27 @@ fetch(urlIncidents).then(response => response.json()).then(data => {
     console.error("Erreur lors de la récupération des données :", error);
 });
 
+form.addEventListener('submit', function(event) {
+    const formData = new FormData(formulaire);
+
+    const donnees = {
+        nom:      document.getElementById('nom').value,
+        prenom:   document.getElementById('prenom').value,
+        numTel:   document.getElementById('numTel').value,
+        table:    document.getElementById('table').value,
+        couverts: document.getElementById('couverts').value,
+    };
+    const url = `http://localhost:8080/api/reservations?nom=${nom}&prenom=${prenom}&numTel=${numTel}&idRestaurant=${table}&nbPers=${couverts}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Réservation confirmée :', data);
+        })
+        .catch(error => {
+            console.error('Erreur lors de la réservation :', error);
+        });
+
+});
 
 

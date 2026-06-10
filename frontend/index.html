@@ -22,6 +22,27 @@
     <main>
         
         <aside class="sidebar">
+            <section class="reservation-section">
+                <h2>Réserver une table</h2>
+                <form class="booking-form">
+                    <label for="nom">Nom :</label>
+                    <input type="text" id="nom" placeholder="Votre nom">
+
+                    <label for="prenom">Prénom :</label>
+                    <input type="text" id="prenom" placeholder="Votre prénom">
+
+                    <label for="numTel">Numéro de téléphone :</label>
+                    <input type="tel" id="numTel" placeholder="06 12 34 56 78", pattern="[0-9]{10}">
+
+                    <label for="table">numéro de table :</label>
+                    <input type="number" id="table" placeholder="Numéro de table">
+
+                    <label for="couverts">Couverts :</label>
+                    <input type="number" id="couverts" min="1" value="2">
+
+                    <button type="submit" class="btn-reserver">Réserver</button>
+                </form>
+            </section>
             <section class="legende-section">
                 <h3>Légende</h3>
                 <ul>
