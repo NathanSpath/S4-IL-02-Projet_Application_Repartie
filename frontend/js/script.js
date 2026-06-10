@@ -7,31 +7,25 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-const blueIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
+const velibIcon = L.divIcon({
+    className: 'map-marker velib',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+    popupAnchor: [0, -10]
 });
 
-const yellowIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
+const incidentIcon = L.divIcon({
+    className: 'map-marker incident', 
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+    popupAnchor: [0, -10]
 });
 
-const redIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
+const restaurantIcon = L.divIcon({
+    className: 'map-marker restaurant',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+    popupAnchor: [0, -10]
 });
 
 const contractName = "nancy";
@@ -45,7 +39,7 @@ const formulaire = document.querySelector('#booking-form');
 
 fetch(urlAPI).then(response => response.json()).then(data => {
     data.forEach(station => {
-        const marker = L.marker([station.position.lat, station.position.lng], {icon: yellowIcon}).addTo(map);
+        const marker = L.marker([station.position.lat, station.position.lng], {icon: velibIcon}).addTo(map);
         const popupContent = `
             <b>${station.name}</b><br>
             Adresse: ${station.address}<br>
@@ -61,7 +55,7 @@ fetch(urlAPI).then(response => response.json()).then(data => {
 
 fetch(urlIncidents).then(response => response.json()).then(data => {
     data.forEach(incident => {
-        const marker = L.marker([incident.latitude, incident.longitude], {icon: redIcon}).addTo(map);
+        const marker = L.marker([incident.latitude, incident.longitude], {icon: incidentIcon}).addTo(map);
 
         if(incident.cause) {
             marker.bindPopup(`<b>Incident:</b> ${incident.cause}`);
@@ -78,7 +72,7 @@ fetch(urlRestaurants).then(response => response.json()).then(data => {
             const lat = parseFloat(coords[0].trim());
             const lng = parseFloat(coords[1].trim());
 
-            const marker = L.marker([lat, lng], {icon: blueIcon}).addTo(map);
+            const marker = L.marker([lat, lng], {icon: restaurantIcon}).addTo(map);
 
             const popupContent = `
                     <b>${restaurant.name}</b><br>
