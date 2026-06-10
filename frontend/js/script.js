@@ -11,7 +11,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 const contractName = "nancy";
 const apiKey = "ccff3ae3c87530ebf6054e6b9b2dc66bec0a4fee";
-const urlAPI = `https://api.jcdecaux.com/vls/v1/stations?contract=${contractName}&apiKey=${apiKey}`; 
+const urlAPI = `https://api.jcdecaux.com/vls/v1/stations?contract=${contractName}&apiKey=${apiKey}`;
+const urlRestaurants = 'http://localhost:8080/api/restaurants';
 
 const urlIncidents = 'http://localhost:8080/api/incidents';
 
@@ -43,5 +44,18 @@ fetch(urlIncidents).then(response => response.json()).then(data => {
     console.error("Erreur lors de la récupération des données :", error);
 });
 
-
+fetch(urlRestaurants).then(response => response.json()).then(data => {
+    console.log("Restaurants:");
+    console.log(data);
+    data.forEach(restaurant => {
+        const marker = L.marker([restaurant.latitude, restaurant.longitude]).addTo(map);
+        const popupContent = `
+            <b>${restaurant.name}</b><br>
+            Adresse: ${restaurant.address}<br>
+        `;
+        marker.bindPopup(popupContent);
+    });
+}).catch(error => {
+    console.error("Erreur lors de la récupération des données :", error);
+});
 
