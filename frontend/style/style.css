@@ -160,15 +160,15 @@ main {
 .compte-rendu-container {
     padding: 30px;
     background-color: #f4f4f4;
-    color: #540b0e;
+    color: var(--burgundy);
     overflow-y: auto;
     width: 100%;
     height: 100%;
 }
 
 .cr-header {
-    background-color: #540b0e;
-    color: #FFF3B0;
+    background-color: var(--burgundy);
+    color: var(--cream);
     padding: 25px;
     border-radius: 8px;
     margin-bottom: 30px;
@@ -192,24 +192,24 @@ main {
 }
 
 .cr-section {
-    background-color: #FFF3B0;
+    background-color: var(--cream);
     padding: 25px;
     border-radius: 8px;
     margin-bottom: 25px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    border-left: 5px solid #335C67;
+    border-left: 5px solid var(--teal);
 }
 
 .cr-section h2 {
-    color: #335C67;
+    color: var(--teal);
     margin-bottom: 20px;
     font-size: 1.5rem;
-    border-bottom: 2px solid #e09f3e;
+    border-bottom: 2px solid var(--orange);
     padding-bottom: 5px;
 }
 
 .cr-section h3 {
-    color: #9E2A2B;
+    color: var(--burgundy);
     margin-top: 15px;
     margin-bottom: 10px;
     font-size: 1.15rem;
@@ -223,8 +223,8 @@ main {
 
 .cr-git-link {
     display: inline-block;
-    background-color: #335C67;
-    color: #FFF3B0;
+    background-color: var(--teal);
+    color: var(--cream);
     padding: 10px 20px;
     text-decoration: none;
     font-weight: bold;
@@ -234,12 +234,12 @@ main {
 }
 
 .cr-git-link:hover {
-    background-color: #e09f3e;
-    color: #540b0e;
+    background-color: var(--orange);
+    color: var(--burgundy);
 }
 
 .architecture-box {
-    background-color: #ffffff;
+    background-color: var(--cream);
     padding: 20px;
     border-radius: 6px;
     border: 1px solid #d1dadd;
@@ -279,17 +279,17 @@ main {
 }
 
 .tech-badge {
-    background-color: #540b0e;
-    color: #FFF3B0;
+    background-color: var(--burgundy);
+    color: var(--cream);
     padding: 5px 12px;
     border-radius: 15px;
     font-size: 0.85rem;
     font-weight: bold;
 }
 
-.tech-badge.network { background-color: #335C67; }
-.tech-badge.db { background-color: #9E2A2B; }
-.tech-badge.web { background-color: #e09f3e; color: #540b0e; }
+.tech-badge.network { background-color: var(--teal); }
+.tech-badge.db { background-color: var(--red); }
+.tech-badge.web { background-color: var(--orange); color: var(--burgundy); }
 
 .code-block {
     background-color: #2d3748;
