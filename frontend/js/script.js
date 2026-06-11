@@ -116,21 +116,63 @@ document.getElementById('restoCheckbox').addEventListener('change', function(e) 
 formulaire.addEventListener('submit', function(event) {
     event.preventDefault();
 
-    const nom      = document.getElementById('nom').value;
-    const prenom   = document.getElementById('prenom').value;
-    const numTel   = document.getElementById('numTel').value;
-    const idTable  = document.getElementById('table').value;
-    const nbPers   = document.getElementById('couverts').value;
-
+    const nom     = document.getElementById('nom').value;
+    const prenom  = document.getElementById('prenom').value;
+    const numTel  = document.getElementById('numTel').value;
+    const idTable = document.getElementById('table').value;
+    const nbPers  = document.getElementById('couverts').value;
 
     const url = `http://localhost:8080/api/reservations?idTable=${encodeURIComponent(idTable)}&Nom=${encodeURIComponent(nom)}&Prenom=${encodeURIComponent(prenom)}&NumTel=${encodeURIComponent(numTel)}&nbPers=${nbPers}`;
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            console.log('Réservation confirmée :', data);
+            if (data === true) {
+                // Réservation réussie
+                formulaire.reset(); // ← vide le formulaire
+                afficherPopup('✅ Réservation confirmée !', 'success');
+            } else if (data.erreur) {
+                // Erreur renvoyée par le serveur
+                afficherPopup('❌ ' + data.erreur, 'error');
+            } else {
+                afficherPopup('❌ La réservation a échoué (table déjà réservée ?)', 'error');
+            }
         })
         .catch(error => {
             console.error('Erreur lors de la réservation :', error);
+            afficherPopup('❌ Erreur de connexion au serveur.', 'error');
         });
 });
+
+function afficherPopup(message, type) {
+    // Supprimer un popup existant
+    const existing = document.getElementById('popup-reservation');
+    if (existing) existing.remove();
+
+    const popup = document.createElement('div');
+    popup.id = 'popup-reservation';
+    popup.textContent = message;
+    popup.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 15px 25px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 16px;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        background-color: ${type === 'success' ? '#4CAF50' : '#f44336'};
+        color: white;
+        transition: opacity 0.5s;
+    `;
+
+    document.body.appendChild(popup);
+
+    // Disparaît automatiquement après 3 secondes
+    setTimeout(() => {
+        popup.style.opacity = '0';
+        setTimeout(() => popup.remove(), 500);
+    }, 3000);
+}
