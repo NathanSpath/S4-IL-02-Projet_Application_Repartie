@@ -112,4 +112,16 @@ public class OpenData {
         return service.creerReservation(idTable,nom,prenom,num,nbPers,duree);
     }
 
+    /**
+     * Permet de recevoir la liste des tables d'un restaurant
+     * @return la liste des tables du restaurant
+     * @throws Exception
+     */
+    public String getTables() throws Exception {
+        String url = "rmi://localhost:1099/ServiceRestaurant";
+        ServiceRestaurant service = (ServiceRestaurant) java.rmi.Naming.lookup(url);
+        String jsonRestaurant = service.getTables();
+        return jsonRestaurant;
+    }
+
 }

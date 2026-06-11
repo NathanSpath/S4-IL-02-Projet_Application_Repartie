@@ -1,9 +1,7 @@
 package main;
 
 import com.sun.net.httpserver.HttpServer;
-import handlers.IncidentsHandler;
-import handlers.ReservationHandler;
-import handlers.RestaurantHandler;
+import handlers.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -18,6 +16,7 @@ public class ServeurProxy {
         server.createContext("/api/incidents", new IncidentsHandler());
         server.createContext("/api/restaurants", new RestaurantHandler());
         server.createContext("/api/reservations", new ReservationHandler());
+        server.createContext("/api/tables", new TablesHandler());
 
         server.setExecutor(null);
         server.start();
