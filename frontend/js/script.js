@@ -69,8 +69,14 @@ fetch(urlIncidents).then(response => response.json()).then(data => {
     console.error("Erreur lors de la récupération des incidents :", error);
 });
 
-fetch(urlRestaurants).then(response => response.json()).then(data => {
-    data.forEach(restaurant => {
+const urlTables = 'http://localhost:8080/api/tables';
+
+Promise.all([
+    fetch(urlRestaurants).then(res => res.json()),
+    fetch(urlTables).then(res => res.json())
+]).then(([restaurants, tables]) => {
+    
+    restaurants.forEach(restaurant => {
         if (restaurant.coordonnees) {
             const coords = restaurant.coordonnees.split(',');
             const lat = parseFloat(coords[0].trim());
@@ -78,15 +84,37 @@ fetch(urlRestaurants).then(response => response.json()).then(data => {
 
             const marker = L.marker([lat, lng], {icon: restaurantIcon}).addTo(restoGroup);
 
-            const popupContent = `
-                    <b>${restaurant.name}</b><br>
-                    Adresse: ${restaurant.adresse}<br>
-                `;
+            console.log(tables);
+            const restaurantTables = tables.filter(table => table.idRes === restaurant.id);
+
+            let tablesHtml = "";
+            if (restaurantTables.length > 0) {
+                tablesHtml = restaurantTables.map(table => `
+                    <li>
+                        Table ${table.numTable} (${table.nbPlaces} couverts) 
+                        <button onclick="preRemplirFormulaire('${table.id}', '${table.nbPlaces}')" class="choose-btn">
+                            Choisir
+                        </button>
+                    </li>
+                `).join('');
+            } else {
+                tablesHtml = "<li>Aucune table disponible</li>";
+            }
+
+            let popupContent = `
+                <b>${restaurant.name}</b><br>
+                Adresse: ${restaurant.adresse}<br>
+                <p class="bold">Tables disponibles :</p>
+                <ul>
+                    ${tablesHtml}
+                </ul>
+            `;
+
             marker.bindPopup(popupContent);
-        }
+        }     
     });
 }).catch(error => {
-    console.error("Erreur lors de la récupération des restaurants :", error);
+    console.error("Erreur lors de la récupération des restaurants ou des tables :", error);
 });
 
 document.getElementById('velibCheckbox').addEventListener('change', function(e) {
@@ -175,4 +203,9 @@ function afficherPopup(message, type) {
         popup.style.opacity = '0';
         setTimeout(() => popup.remove(), 500);
     }, 3000);
+}
+
+function preRemplirFormulaire(idTable, nbCouverts) {
+    document.getElementById('table').value = idTable;
+    document.getElementById('couverts').value = nbCouverts;
 }
