@@ -42,9 +42,10 @@ public class ServiceRestaurantImpl extends UnicastRemoteObject implements Servic
     }
 
     @Override
-    public String creerReservation(String idTab, String idClient, int nbPersonnes, double duree) throws RemoteException {
+    public String creerReservation(String idTab, String nom, String prenom, String num, int nbPersonnes, double duree) throws RemoteException {
         ObjectMapper mapper = new ObjectMapper();
-        Reservation r = new Reservation(idClient, idTab, nbPersonnes, duree);
+        String idClient = clientService.getClient(nom,prenom,num).getId();
+        Reservation r = new Reservation(idClient,idTab,nbPersonnes,duree);
         boolean success;
         try {
             success = reservationService.addReservation(r) != null;
@@ -59,6 +60,7 @@ public class ServiceRestaurantImpl extends UnicastRemoteObject implements Servic
             System.err.println("Erreur de sérialisation JSON du résultat de réservation: " + e.getMessage());
             throw new RemoteException("Erreur interne lors de la sérialisation du résultat.", e);
         }
+        System.out.println(jsonResult);
         return jsonResult;
     }
 

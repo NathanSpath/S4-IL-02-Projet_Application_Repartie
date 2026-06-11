@@ -35,7 +35,7 @@ const urlRestaurants = 'http://localhost:8080/api/restaurants';
 
 const urlIncidents = 'http://localhost:8080/api/incidents';
 const urlReservation = 'http://localhost:8080/api/reservations';
-const formulaire = document.querySelector('#booking-form');
+const formulaire = document.querySelector('.booking-form');
 
 const velibGroup = L.layerGroup().addTo(map);
 const restoGroup = L.layerGroup().addTo(map);
@@ -113,17 +113,17 @@ document.getElementById('restoCheckbox').addEventListener('change', function(e) 
     }
 });
 
-form.addEventListener('submit', function(event) {
-    const formData = new FormData(formulaire);
+formulaire.addEventListener('submit', function(event) {
+    event.preventDefault();
 
-    const donnees = {
-        nom: document.getElementById('nom').value,
-        prenom: document.getElementById('prenom').value,
-        numTel: document.getElementById('numTel').value,
-        table: document.getElementById('table').value,
-        couverts: document.getElementById('couverts').value,
-    };
-    const url = `http://localhost:8080/api/reservations?nom=${nom}&prenom=${prenom}&numTel=${numTel}&idRestaurant=${table}&nbPers=${couverts}`;
+    const nom      = document.getElementById('nom').value;
+    const prenom   = document.getElementById('prenom').value;
+    const numTel   = document.getElementById('numTel').value;
+    const idTable  = document.getElementById('table').value;
+    const nbPers   = document.getElementById('couverts').value;
+
+
+    const url = `http://localhost:8080/api/reservations?idTable=${encodeURIComponent(idTable)}&Nom=${encodeURIComponent(nom)}&Prenom=${encodeURIComponent(prenom)}&NumTel=${encodeURIComponent(numTel)}&nbPers=${nbPers}`;
 
     fetch(url)
         .then(response => response.json())

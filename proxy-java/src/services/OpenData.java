@@ -1,23 +1,14 @@
 package services;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.net.ProxySelector;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-import com.sun.net.httpserver.HttpServer;
+import RMI.rmi.ServiceRestaurant;
 import org.json.JSONObject;
 import org.json.JSONArray;
-
-import RMI.rmi.ServiceRestaurant;
 
 public class OpenData {
     private HttpClient client;
@@ -114,11 +105,11 @@ public class OpenData {
      * @return un message de confirmation ou d'erreur
      * @throws Exception
      */
-    public String reserverTable(String idRestaurant,String idClient,int nbPers) throws Exception {
+    public String reserverTable(String idTable,String nom,String prenom,String num,int nbPers, int duree) throws Exception {
         String url = "rmi://localhost:1099/ServiceRestaurant";
         ServiceRestaurant service = (ServiceRestaurant) java.rmi.Naming.lookup(url);
 
-        return service.creerReservation(idRestaurant, idClient, nbPers,2);
+        return service.creerReservation(idTable,nom,prenom,num,nbPers,duree);
     }
 
 }

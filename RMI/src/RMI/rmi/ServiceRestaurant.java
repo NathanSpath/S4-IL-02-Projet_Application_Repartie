@@ -22,7 +22,7 @@ public interface ServiceRestaurant extends Remote {
      * @return Une chaîne JSON représentant un booléen (true si la réservation a réussi, false sinon).
      * @throws RemoteException
      */
-    String creerReservation(String idTab, String idCli, int nbPers, double duree) throws RemoteException;
+    String creerReservation(String idTab, String nom, String prenom, String num, int nbPersonnes, double duree) throws RemoteException;
 
     String getReservations(String nom, String prenom, String numTel) throws  RemoteException;
 
