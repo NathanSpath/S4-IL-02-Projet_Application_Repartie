@@ -22,7 +22,7 @@ const incidentIcon = L.divIcon({
 });
 
 const restaurantIcon = L.divIcon({
-    className: 'map-marker restaurant',
+    className: 'map-marker resto',
     iconSize: [20, 20],
     iconAnchor: [10, 10],
     popupAnchor: [0, -10]
