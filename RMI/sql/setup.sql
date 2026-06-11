@@ -39,7 +39,7 @@ CREATE TABLE RMI_RESERVATION(
 INSERT INTO RMI_RESTAURANTS (nom, adresse, coord) VALUES ('Le Grenier à Sel', '28 Place de la Carrière, 54000 Nancy', '48.696614, 6.182247');
 INSERT INTO RMI_RESTAURANTS (nom, adresse, coord) VALUES ('Excelsior', '50 Rue Henri Poincaré, 54000 Nancy', '48.690833, 6.176389');
 INSERT INTO RMI_RESTAURANTS (nom, adresse, coord) VALUES ('Le Bouche à Oreille', '42 Rue des Carmes, 54000 Nancy', '48.691472, 6.181822');
-INSERT INTO RMI_RESTAURANTS (nom, adresse, coord) VALUES ('La RMI.model.Table du Bon Roi Stanislas', '7 Rue Gustave Simon, 54000 Nancy', '48.693631, 6.181315');
+INSERT INTO RMI_RESTAURANTS (nom, adresse, coord) VALUES ('La Table du Bon Roi Stanislas', '7 Rue Gustave Simon, 54000 Nancy', '48.693631, 6.181315');
 INSERT INTO RMI_RESTAURANTS (nom, adresse, coord) VALUES ('Les Frères Marchand', '99 Grande Rue, 54000 Nancy', '48.695392, 6.179914');
 INSERT INTO RMI_RESTAURANTS (nom, adresse, coord) VALUES ('RAYA', '1 Bd de l''Insurrection du Ghetto de Varsovie, 54000 Nancy','48.685558, 6.181652');
 INSERT INTO RMI_RESTAURANTS (nom, adresse, coord) VALUES ('Chicken Street','16 Av. du Général Leclerc, 54000 Nancy','48.684414, 6.186244');
