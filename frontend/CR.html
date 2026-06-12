@@ -23,8 +23,8 @@
         <div class="cr-header">
             <h1>Comptes Rendus — Projet Application Répartie</h1>
             <div class="cr-meta">
-                <span><strong>Équipe :</strong> Nathan Spath (Proxy), Enzo Marchal & Julien Vincent (RMI), Arthur (BDD)</span>
-                <span><strong>Année :</strong> 2025 – 2026</span>
+                <span><strong>Équipe :</strong> Nathan Spath (Proxy), Enzo Marchal & Julien Vincent (RMI), Arthur (BDD), Matthieu Cabot(Web)</span>
+                <span><strong>Année :</strong> 2025 - 2026</span>
             </div>
         </div>
 
@@ -130,8 +130,9 @@ Step 2: [LancerServiceRestaurant] ──┘
             <h3>3.1 Modélisation de la Base de Données</h3>
             <ul class="cr-list">
                 <li><strong>Clients :</strong> ID, Nom, Prénom, Numéro de Téléphone. <em>(Note : Le numéro de téléphone est stocké en String pour préserver les zéros initiaux et éviter les erreurs d'octal Java).</em></li>
-                <li><strong>Restaurants & Tables :</strong> Détails des établissements et de leurs tables (liés par la clé étrangère IDRES).</li>
-                <li><strong>Réservations :</strong> Liées aux clients et aux tables, gérant les convives, la durée et l'horodatage.</li>
+                <li><strong>Restaurants :</strong>  Contient les détails des établissements (ID, Nom, Adresse, Coordonnées géographiques).</li>
+                <li><strong>Tables :</strong> Représente les tables au sein des restaurants (ID, ID du Restaurant, Numéro de Table, Nombre de Places). Une clé étrangère (`IDRES`) lie chaque table à un restaurant, assurant l'intégrité référentielle.</li>
+                <li><strong>Réservations :</strong>Enregistre les réservations effectuées (ID, ID du Client, ID de la Table, Nombre de Convives, Durée, Date et Heure de la Réservation). Des clés étrangères (`IDCLI`, `IDTAB`) lient les réservations aux clients et aux tables.</li>
             </ul>
 
             <div class="tech-tags">
@@ -140,9 +141,10 @@ Step 2: [LancerServiceRestaurant] ──┘
             </div>
 
             <h3>3.2 Modèle Transactionnel</h3>
+            <p>La gestion des transactions est un pilier fondamental pour garantir la cohérence et l'intégrité des données, surtout dans un environnement où plusieurs opérations peuvent être effectuées simultanément ou en cascade.</p>
             <ul class="cr-list">
-                <li><strong>Transactions Atomiques :</strong> Chaque modification est atomique. Soit tout est complété (<code>COMMIT</code>), soit rien ne l'est (<code>ROLLBACK</code>). Cela prévient les états incohérents.</li>
-                <li><strong>Détection de Conflits :</strong> Un mécanisme dans la méthode <code>addReservation</code> prévient les chevauchements sur une même table via une requête SQL de vérification préalable.</li>
+                <li><strong>Transactions Atomiques :</strong> Chaque opération de modification de la base de données (ajout, mise à jour, suppression) est conçue pour être atomique. Cela signifie que soit toutes les étapes de l'opération sont complétées avec succès (transaction <code>COMMIT</code>), soit aucune ne l'est (transaction <code>ROLLBACK</code>). Cette approche prévient les états incohérents de la base de données en cas d'erreur ou d'interruption.</li>
+                <li><strong>Détection de Conflits de Réservation :</strong> Un mécanisme spécifique a été mis en place dans la méthode <code>addReservation</code> de la classe <code>Requete</code> pour prévenir les chevauchements de réservations sur une même table via une requête SQL de vérification préalable.</li>
             </ul>
         </section>
 
