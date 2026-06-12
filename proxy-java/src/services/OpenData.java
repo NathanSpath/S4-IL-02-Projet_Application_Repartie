@@ -132,10 +132,10 @@ public class OpenData {
      * Permet de recevoir la liste des réservations d'un client
      * @throws Exception
      */
-    public String getReservations() throws Exception {
+    public String getAllReservation() throws Exception {
         String url = "rmi://localhost:1099/ServiceRestaurant";
         ServiceRestaurant service = (ServiceRestaurant) java.rmi.Naming.lookup(url);
-        String jsonRestaurant = service.getReservations();
+        String jsonRestaurant = service.getAllReservation();
         return jsonRestaurant;
     }
 

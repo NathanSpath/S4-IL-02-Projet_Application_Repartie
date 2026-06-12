@@ -21,7 +21,7 @@ public class ListeReservationHandler implements HttpHandler {
         int httpStatus = 200;
 
         try {
-            responseBody = dataClient.getReservations();
+            responseBody = dataClient.getAllReservation();
 
         } catch (Exception e) {
             httpStatus = 500;

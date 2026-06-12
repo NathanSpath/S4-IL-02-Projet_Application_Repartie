@@ -2,7 +2,6 @@ package RMI.rmi;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
@@ -86,6 +85,21 @@ public class ServiceRestaurantImpl extends UnicastRemoteObject implements Servic
             System.err.println("Erreur de sérialisation JSON des réservations: " + e.getMessage());
             throw new RemoteException("Erreur interne lors de la récupération des détails.", e);
         }
+        return jsonResult;
+    }
+
+    @Override
+    public String getAllReservation() throws RemoteException {
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonResult;
+        try {
+            Reservation[] reservations = reservationService.getReservations();
+            jsonResult = mapper.writeValueAsString(reservations);
+        } catch (JsonProcessingException e) {
+            System.err.println("Erreur de sérialisation JSON des restaurants: " + e.getMessage());
+            throw new RemoteException("Erreur interne lors de la récupération des détails.", e);
+        }
+        System.out.println("Restaurants récupérés et sérialisés en JSON: " + jsonResult);
         return jsonResult;
     }
 

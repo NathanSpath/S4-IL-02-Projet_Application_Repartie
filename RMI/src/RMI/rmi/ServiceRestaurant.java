@@ -1,10 +1,7 @@
 package RMI.rmi;
 
-import RMI.service.ReservationService;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 public interface ServiceRestaurant extends Remote {
@@ -27,6 +24,8 @@ public interface ServiceRestaurant extends Remote {
     String creerReservation(String idTab, String nom, String prenom, String num, int nbPersonnes, double duree, Timestamp dateReservation) throws RemoteException;
 
     String getReservations(String nom, String prenom, String numTel) throws  RemoteException;
+
+    String getAllReservation() throws RemoteException;
 
     String getTables() throws RemoteException;
 }
