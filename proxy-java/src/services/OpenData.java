@@ -4,6 +4,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.Duration;
 
 import RMI.rmi.ServiceRestaurant;
@@ -105,11 +107,11 @@ public class OpenData {
      * @return un message de confirmation ou d'erreur
      * @throws Exception
      */
-    public String reserverTable(String idTable,String nom,String prenom,String num,int nbPers, int duree) throws Exception {
+    public String reserverTable(String idTable, String nom, String prenom, String num, int nbPers, int duree, Timestamp dateReservation) throws Exception {
         String url = "rmi://localhost:1099/ServiceRestaurant";
         ServiceRestaurant service = (ServiceRestaurant) java.rmi.Naming.lookup(url);
 
-        return service.creerReservation(idTable,nom,prenom,num,nbPers,duree);
+        return service.creerReservation(idTable,nom,prenom,num,nbPers,duree,dateReservation);
     }
 
     /**

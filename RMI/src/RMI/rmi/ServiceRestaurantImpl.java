@@ -2,7 +2,9 @@ package RMI.rmi;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import RMI.model.Client;
 import RMI.model.Reservation;
@@ -42,10 +44,10 @@ public class ServiceRestaurantImpl extends UnicastRemoteObject implements Servic
     }
 
     @Override
-    public String creerReservation(String idTab, String nom, String prenom, String num, int nbPersonnes, double duree) throws RemoteException {
+    public String creerReservation(String idTab, String nom, String prenom, String num, int nbPersonnes, double duree, Timestamp dateReservation) throws RemoteException {
         ObjectMapper mapper = new ObjectMapper();
         String idClient = clientService.getClient(nom,prenom,num).getId();
-        Reservation r = new Reservation(idClient,idTab,nbPersonnes,duree);
+        Reservation r = new Reservation(idClient,idTab,nbPersonnes,duree,dateReservation);
         boolean success;
         try {
             success = reservationService.addReservation(r) != null;

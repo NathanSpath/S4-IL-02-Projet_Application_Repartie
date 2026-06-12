@@ -15,7 +15,7 @@ const velibIcon = L.divIcon({
 });
 
 const incidentIcon = L.divIcon({
-    className: 'map-marker incident', 
+    className: 'map-marker incident',
     iconSize: [20, 20],
     iconAnchor: [10, 10],
     popupAnchor: [0, -10]
@@ -121,18 +121,19 @@ formulaire.addEventListener('submit', function(event) {
     const numTel  = document.getElementById('numTel').value;
     const idTable = document.getElementById('table').value;
     const nbPers  = document.getElementById('couverts').value;
+    const date  = document.getElementById('date').value;
+    const duree  = document.getElementById('duree').value;
 
-    const url = `http://localhost:8080/api/reservations?idTable=${encodeURIComponent(idTable)}&Nom=${encodeURIComponent(nom)}&Prenom=${encodeURIComponent(prenom)}&NumTel=${encodeURIComponent(numTel)}&nbPers=${nbPers}`;
+    const url = `http://localhost:8080/api/reservations?idTable=${encodeURIComponent(idTable)}&Nom=${encodeURIComponent(nom)}&Prenom=${encodeURIComponent(prenom)}&NumTel=${encodeURIComponent(numTel)}&nbPers=${nbPers}&duree=${encodeURIComponent(duree)}&dateReservation=${encodeURIComponent(date)}`;
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
             if (data === true) {
                 // Réservation réussie
-                formulaire.reset(); // ← vide le formulaire
+                formulaire.reset();
                 afficherPopup('✅ Réservation confirmée !', 'success');
             } else if (data.erreur) {
-                // Erreur renvoyée par le serveur
                 afficherPopup('❌ ' + data.erreur, 'error');
             } else {
                 afficherPopup('❌ La réservation a échoué (table déjà réservée ?)', 'error');
@@ -145,7 +146,6 @@ formulaire.addEventListener('submit', function(event) {
 });
 
 function afficherPopup(message, type) {
-    // Supprimer un popup existant
     const existing = document.getElementById('popup-reservation');
     if (existing) existing.remove();
 
@@ -169,8 +169,6 @@ function afficherPopup(message, type) {
     `;
 
     document.body.appendChild(popup);
-
-    // Disparaît automatiquement après 3 secondes
     setTimeout(() => {
         popup.style.opacity = '0';
         setTimeout(() => popup.remove(), 500);
