@@ -17,6 +17,7 @@ public class ServeurProxy {
         server.createContext("/api/restaurants", new RestaurantHandler());
         server.createContext("/api/reservations", new ReservationHandler());
         server.createContext("/api/tables", new TablesHandler());
+        server.createContext("/api/liste-reservations", new ListeReservationHandler());
 
         server.setExecutor(null);
         server.start();
