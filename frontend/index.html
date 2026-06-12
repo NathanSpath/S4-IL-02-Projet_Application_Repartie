@@ -35,10 +35,17 @@
                     <input type="tel" id="numTel" placeholder="06 12 34 56 78", pattern="[0-9]{10}">
 
                     <label for="table">numéro de table :</label>
-                    <input type="number" id="table" placeholder="Numéro de table">
+                    <input type="text" id="table" placeholder="Numéro de table">
 
                     <label for="couverts">Couverts :</label>
                     <input type="number" id="couverts" min="1" value="2">
+
+                    <label for="date">Date de réservation :</label>
+                    <input type="datetime-local" id="date">
+
+                    <label for="duree">Durée :</label>
+                    <input type="number" id="duree" value="2">
+
 
                     <button type="submit" class="btn-reserver">Réserver</button>
                 </form>

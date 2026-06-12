@@ -173,7 +173,7 @@ public class Requete {
         return clientList.toArray(new Client[0]);
     }
 
-    public Client getClient(String nom, String prenom,  String numTel) {
+    public Client getClient(String nom, String prenom, String numTel) {
         Client client = null;
         String sql = "SELECT * FROM E46438U.RMI_CLIENT WHERE NOM = ? AND PRENOM = ? AND NUMTEL = ?";
         try (Connection conn = getConnection();
@@ -184,9 +184,16 @@ public class Requete {
             pstmt.setString(3, numTel);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    client=new Client(rs.getString("ID"), rs.getString("NOM"), rs.getString("PRENOM"), rs.getString("NUMTEL"));
+                    client = new Client(rs.getString("ID"), rs.getString("NOM"), rs.getString("PRENOM"), rs.getString("NUMTEL"));
                 }
             }
+
+            // Si le client n'existe pas, on le crée
+            if (client == null) {
+                Client nouveauClient = new Client(null, nom, prenom, numTel);
+                client = addClient(conn, nouveauClient);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

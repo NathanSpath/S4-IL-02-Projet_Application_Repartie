@@ -8,6 +8,8 @@ import services.OpenData;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,16 +57,19 @@ public class ReservationHandler implements HttpHandler {
 
             Map<String, String> params = queryToMap(query);
 
-            if (!params.containsKey("idRestaurant") || !params.containsKey("idClient") || !params.containsKey("nbPers")) {
+            if (!params.containsKey("idTable") || !params.containsKey("Nom") ||  !params.containsKey("Prenom") || !params.containsKey("NumTel") || !params.containsKey("nbPers") || !params.containsKey("duree") || !params.containsKey("dateReservation"))  {
                 httpStatus = 400;
                 responseBody = "{\"erreur\": \"Paramètres manquants. idRestaurant, idClient et nbPers sont obligatoires.\"}";
             } else {
-                String idResto = params.get("idRestaurant");
-                String idCli = params.get("idClient");
+                String idTable = params.get("idTable");
+                String nom = params.get("Nom");
+                String prenom = params.get("Prenom");
+                String numTel = params.get("NumTel");
+                int nbPers = Integer.valueOf(params.get("nbPers"));
+                int duree = Integer.valueOf(params.get("duree"));
+                Timestamp dateReservation = Timestamp.valueOf(params.get("dateReservation").replace("T", " ") + ":00");
 
-                int nbPers = Integer.parseInt(params.get("nbPers"));
-
-                responseBody = dataClient.reserverTable(idResto, idCli, nbPers);
+                responseBody = dataClient.reserverTable(idTable,nom,prenom,numTel, nbPers,duree,dateReservation);
             }
 
         } catch (NumberFormatException e) {

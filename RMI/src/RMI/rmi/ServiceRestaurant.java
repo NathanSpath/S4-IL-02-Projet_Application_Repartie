@@ -4,6 +4,8 @@ import RMI.service.ReservationService;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 public interface ServiceRestaurant extends Remote {
 
@@ -22,7 +24,7 @@ public interface ServiceRestaurant extends Remote {
      * @return Une chaîne JSON représentant un booléen (true si la réservation a réussi, false sinon).
      * @throws RemoteException
      */
-    String creerReservation(String idTab, String idCli, int nbPers, double duree) throws RemoteException;
+    String creerReservation(String idTab, String nom, String prenom, String num, int nbPersonnes, double duree, Timestamp dateReservation) throws RemoteException;
 
     String getReservations(String nom, String prenom, String numTel) throws  RemoteException;
 

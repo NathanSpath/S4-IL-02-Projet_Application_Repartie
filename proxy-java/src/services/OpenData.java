@@ -1,23 +1,16 @@
 package services;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.net.ProxySelector;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.Duration;
 
-import com.sun.net.httpserver.HttpServer;
+import RMI.rmi.ServiceRestaurant;
 import org.json.JSONObject;
 import org.json.JSONArray;
-
-import RMI.rmi.ServiceRestaurant;
 
 public class OpenData {
     private HttpClient client;
@@ -108,17 +101,42 @@ public class OpenData {
 
     /**
      * Permet de réserver une table dans un restaurant
-     * @param idRestaurant id du restaurant
-     * @param idClient id du client
+     * @param idTable l'identifiant de la table à réserver
+     * @param nom le nom du client
+     * @param prenom le prénom du client
+     * @param num le numéro de téléphone du client
      * @param nbPers nombre de personnes
      * @return un message de confirmation ou d'erreur
      * @throws Exception
      */
-    public String reserverTable(String idRestaurant,String idClient,int nbPers) throws Exception {
+    public String reserverTable(String idTable, String nom, String prenom, String num, int nbPers, int duree, Timestamp dateReservation) throws Exception {
         String url = "rmi://localhost:1099/ServiceRestaurant";
         ServiceRestaurant service = (ServiceRestaurant) java.rmi.Naming.lookup(url);
 
-        return service.creerReservation(idRestaurant, idClient, nbPers,2);
+        return service.creerReservation(idTable,nom,prenom,num,nbPers,duree,dateReservation);
+    }
+
+    /**
+     * Permet de recevoir la liste des tables d'un restaurant
+     * @return la liste des tables du restaurant
+     * @throws Exception
+     */
+    public String getTables() throws Exception {
+        String url = "rmi://localhost:1099/ServiceRestaurant";
+        ServiceRestaurant service = (ServiceRestaurant) java.rmi.Naming.lookup(url);
+        String jsonRestaurant = service.getTables();
+        return jsonRestaurant;
+    }
+
+    /**
+     * Permet de recevoir la liste des réservations d'un client
+     * @throws Exception
+     */
+    public String getReservations() throws Exception {
+        String url = "rmi://localhost:1099/ServiceRestaurant";
+        ServiceRestaurant service = (ServiceRestaurant) java.rmi.Naming.lookup(url);
+        String jsonRestaurant = service.getReservations();
+        return jsonRestaurant;
     }
 
 }
