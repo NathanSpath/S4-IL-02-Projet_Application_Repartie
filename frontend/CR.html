@@ -3,155 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compte Rendu</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <title>Compte Rendu - Application Répartie Nancy</title>
     <link rel="stylesheet" href="style/style.css" />
 </head>
-
-<div class="compte-rendu-container">
-
-    <div class="cr-header">
-        <h1>Rapport d'Architecture Logicielle — SAÉ Application Répartie</h1>
-        <div class="cr-meta">
-            <span><strong>Groupe :</strong> BUT2 RA-IL1</span>
-            <span><strong>Membres de l'équipe :</strong> SPATH Nathan, VINCENT Julien, MARCHAL Enzo, JACQUET Arthur, CABOT Matthieu</span>
-        </div>
-    </div>
-
-    <div class="cr-section">
-        <h2>1. Architecture Générale du Système</h2>
-        <p>
-            Notre application repose sur une architecture multiniveau (N-Tier) distribuée permettant de collecter, centraliser et afficher de manière homogène des données de la métropole de Nancy. Les échanges s'articulent autour d'un client léger (navigateur), d'un serveur Proxy intermédiaire gérant les restrictions réseaux (CORS) et d'un écosystème d'objets distants distribués via RMI (Remote Method Invocation) connectés à une base de données relationnelle.
-        </p>
-        
-        <div class="architecture-box">
-            <pre class="mermaid" style="width: 100%; display: block;">
-graph TD
-    subgraph Client [Navigateur Web / Frontend]
-        HTML[index.html / style.css]
-        JS[script.js - Leaflet.js]
-    end
-
-    subgraph API_Externe [APIs Publiques Externes]
-        JCDecaux[API JCDecaux Vélos]
-        Waze[API Waze Grand Nancy]
-    end
-
-    subgraph Middleware [Serveur Proxy Java - HttpServer]
-        ProxyMain[ServeurProxy :8080]
-        HandlerInc[IncidentsHandler]
-        HandlerRest[RestaurantHandler]
-        HandlerRes[ReservationHandler]
-        OpenData[OpenData Client HTTP]
-    end
-
-    subgraph Backend [Système Réparti RMI]
-        Registry[RMI Registry :1099]
-        Central[LancerServiceCentral]
-        RestoService[LancerServiceRestaurant]
-        JDBC[Requete DAO]
-    end
-
-    subgraph Data [Stockage]
-        Oracle[(BDD Oracle Infodb)]
-    end
-
-    JS -->|Requête Directe HTTPS| JCDecaux
-    JS -->|Requête HTTP /api/incidents| HandlerInc
-    JS -->|Requête HTTP /api/restaurants| HandlerRest
-    JS -->|Requête HTTP /api/reservations| HandlerRes
-    
-    HandlerInc --> OpenData
-    HandlerRest --> OpenData
-    HandlerRes --> OpenData
-
-    OpenData -->|Requête HTTPS avec/sans cache| Waze
-    OpenData -->|Lookup & Invocation RMI| RestoService
-    RestoService -->|Enregistrement RMI| Central
-    RestoService -->|JDBC Thin Connection| Oracle
-            </pre>
-        </div>
-
-        <div class="tech-tags">
-            <span class="tech-badge">Java RMI</span>
-            <span class="tech-badge">HttpServer</span>
-            <span class="tech-badge network">HTTP/HTTPS</span>
-            <span class="tech-badge network">CORS Bypass</span>
-            <span class="tech-badge db">JDBC Thin</span>
-            <span class="tech-badge db">Oracle SQL</span>
-            <span class="tech-badge web">Leaflet.js</span>
-            <span class="tech-badge web">JSON</span>
-        </div>
-    </div>
-
-    <div class="cr-section">
-        <h2>2. État d'Avancement du Projet</h2>
-        
-        <h3>Ce qui a été réalisé et validé :</h3>
-        <ul class="cr-list">
-            <li><strong>Base de données relationnelle :</strong> Conception et implémentation du schéma relationnel complet sous Oracle (Tables des restaurants, des tables physiques, des clients et des réservations avec clés étrangères et intégrité référentielle en cascade). Un jeu de données représentatif positionné sur Nancy a été injecté.</li>
-            <li><strong>Infrastructure RMI :</strong> Mise en place du Serveur Central faisant office de distributeur et d'annuaire, couplé à l'implémentation dynamique du service de gestion des restaurants (récupération sérialisée en JSON via Jackson et algorithme natif de détection automatique des conflits temporels lors des réservations).</li>
-            <li><strong>Serveur Proxy (HttpServer) :</strong> Établissement complet des points d'accès (endpoints) HTTP pour encapsuler les appels. Le proxy résout de manière transparente les requêtes d'incidents routiers en interrogeant les flux OpenData du Grand Nancy via HttpClient, tout en gérant de façon adaptative le cache de l'IUT.</li>
-            <li><strong>Cartographie Client :</strong> Initialisation de la carte Leaflet.js centrée sur Nancy avec affichage temps réel, icônes et popups détaillés pour l'ensemble des stations VélOstan'lib (via appel direct HTTPS JCDecaux) et des incidents routiers (via tunnel proxy).</li>
+<body>
+<header>
+    <div class="logo">Nancy</div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Carte Interactive</a></li>
+            <li><a href="#" class="active">Compte Rendu</a></li>
         </ul>
+    </nav>
+</header>
 
-        <h3>Fonctionnalités à venir :</h3>
-        <p>A implémenter dans le rapport</p>
-    </div>
+<main>
+    <div class="compte-rendu-container">
 
-    <div class="cr-section">
-        <h2>3. Guide de Déploiement et d'Exécution</h2>
-        <p>
-            Pour déployer et exécuter l'application sur les machines de l'IUT ou dans un environnement Linux local, veuillez suivre rigoureusement les étapes d'instanciation ordonnées ci-dessous :
-        </p>
-
-        <h3>Étape 1 : Initialisation de la base de données</h3>
-        <p>Exécutez le script SQL d'initialisation sur la base de données Oracle de l'IUT afin de structurer les tables et d'accorder les privilèges d'accès requis :</p>
-        <div class="code-block">
-sqlplus e54916u/MotDePasse@charlemagne.iutnc.univ-lorraine.fr:1521/infodb @RMI/sql/setup.sql
+        <div class="cr-header">
+            <h1>Comptes Rendus — Projet Application Répartie</h1>
+            <div class="cr-meta">
+                <span><strong>Équipe :</strong> Nathan Spath (Proxy), Enzo Marchal & Julien Vincent (RMI), Arthur (BDD)</span>
+                <span><strong>Année :</strong> 2025 – 2026</span>
+            </div>
         </div>
 
-        <h3>Étape 2 : Lancement de l'infrastructure RMI</h3>
-        <p>Démarrez d'abord le registre RMI et le service centralisé de distribution sur la machine hôte principale :</p>
-        <div class="code-block">
-java RMI.launcher.LancerServiceCentral
-        </div>
-        <p>Sur la même machine ou sur une machine distincte du réseau, démarrez le service de gestion de restaurant en lui fournissant l'adresse IP du serveur centralisé :</p>
-        <div class="code-block">
-java RMI.launcher.LancerServiceRestaurant &lt;IP_SERVEUR_CENTRAL&gt;
-        </div>
+        <section class="cr-section">
+            <h2>1. Architecture du Proxy Web / RMI</h2>
 
-        <h3>Étape 3 : Lancement du Serveur Proxy HTTP</h3>
-        <p>Compilez et démarrez le serveur proxy Java qui va ouvrir le port d'écoute 8080 et lier les différents gestionnaires de requêtes (Handlers) :</p>
-        <div class="code-block">
-java main.ServeurProxy
-        </div>
+            <p>L'objectif de cette implémentation est de fournir une interface unique et sécurisée (un point d'entrée central) pour une application web front-end (carte Leaflet), en contournant les restrictions de sécurité des navigateurs (CORS) et en unifiant des sources de données hétérogènes (API REST externes et services RMI internes).</p>
 
-        <h3>Étape 4 : Hébergement du client web</h3>
-        <p>A implémenter dans le rapport</p>
-    </div>
+            <div class="architecture-box">
+                <img src="../CR/SchemaProxy.png" alt="Schéma d'architecture du Proxy Web et RMI" style="max-width: 100%; height: auto; border-radius: 6px;">
+            </div>
 
-    <div class="cr-section">
-        <h2>4. Analyse Critique et Sécurité : Le Contournement du CORS</h2>
-        <p>
-            Dans le cadre de cette SAÉ, nous avons configuré notre serveur proxy pour injecter explicitement l'en-tête de contrôle d'accès <strong>"Access-Control-Allow-Origin: *"</strong> lors du traitement des requêtes HTTP entrantes provenant du navigateur.
-        </p>
-        <p>
-            <strong>Est-ce une pratique responsable ?</strong>
-        </p>
-        <p>
-            D'un point de vue de la sécurité informatique, l'utilisation de la directive joker <code>*</code> n'est pas idéale en environnement de production, bien qu'elle s'avère pratique en phase de développement local. En configurant l'origine sur <code>*</code>, la protection SOP (Same-Origin Policy) du navigateur est assouplie. Une approche de développement sécurisée consisterait à restreindre cet en-tête en remplaçant l'étoile par l'URL exacte du serveur web autorisé à consommer ces API.
-        </p>
-    </div>
+            <h3>1.1 Le Serveur Central (Le "Chef d'Orchestre")</h3>
+            <p><strong>Fichier associé :</strong> <code>ServeurProxy.java</code></p>
+            <p>Le cœur du système repose sur la classe native <code>HttpServer</code> de Java. Ce serveur agit comme un routeur d'aiguillage. Son rôle est strictement limité à l'écoute sur le port <code>8080</code> et à la distribution des requêtes entrantes vers les contrôleurs appropriés.</p>
 
-    <div class="cr-section">
-        <h2>5. Références et Code Source</h2>
-        <p>L'intégralité de nos codes sources Java (RMI et Proxy), scripts SQL de configuration, ainsi que l'interface utilisateur web sont versionnés et accessibles publiquement sur notre dépôt de développement :</p>
-        <a href="https://github.com/NathanSpath/S4-IL-02-Projet_Application_Repartie.git" target="_blank" class="cr-git-link">Accéder au Dépôt GitHub du Projet</a>
-    </div>
+            <ul class="cr-list">
+                <li><strong>/api/incidents :</strong> Récupération des travaux (Open Data) via <code>IncidentsHandler</code></li>
+                <li><strong>/api/restaurants :</strong> Liste globale des restaurants via <code>RestaurantHandler</code></li>
+                <li><strong>/api/tables :</strong> Liste des tables disponibles via <code>TablesHandler</code></li>
+                <li><strong>/api/liste-reservations :</strong> Historique des réservations via <code>ListeReservationHandler</code></li>
+                <li><strong>/api/reservations :</strong> Création d'une réservation via <code>ReservationHandler</code></li>
+            </ul>
+            <p>Cette séparation stricte garantit un code maintenable et permet à plusieurs développeurs de travailler en parallèle sur différentes routes sans générer de conflits Git complexes.</p>
 
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-    <script>
-        mermaid.initialize({ startOnLoad: true, theme: 'forest' });
-    </script>
-</div>
+            <h3>1.2 Les Handlers (Les "Contrôleurs")</h3>
+            <p>Chaque route est gérée par une classe implémentant l'interface <code>HttpHandler</code>. Ces classes ont trois responsabilités majeures :</p>
+            <ul class="cr-list">
+                <li><strong>La gestion de la sécurité (CORS) :</strong> Elles injectent systématiquement les en-têtes <code>Access-Control-Allow-Origin: *</code>.</li>
+                <li><strong>Le traitement des paramètres :</strong> Extraction de la chaîne de requête (Query String) et conversion en données typées.</li>
+                <li><strong>La gestion des erreurs :</strong> Les blocs <code>try/catch</code> garantissent un code HTTP approprié (ex: 400 ou 500) accompagné d'un message JSON propre.</li>
+            </ul>
+
+            <h3>1.3 Le Service de Données (Le "Moteur")</h3>
+            <p><strong>Fichier associé :</strong> <code>OpenData.java</code>. Cette classe masque la complexité des protocoles en gérant deux flux distincts :</p>
+
+            <div class="tech-tags">
+                <span class="tech-badge web">Flux A : HTTP externe (Open Data)</span>
+                <span class="tech-badge network">Flux B : RMI interne</span>
+            </div>
+
+            <ul class="cr-list" style="margin-top: 15px;">
+                <li><strong>HTTP (Vélos/Travaux) :</strong> Utilise <code>HttpClient</code> pour interroger l'API de Nancy. Parse la réponse avec <code>org.json</code> et extrait la chaîne <code>polyline</code> en <code>latitude</code> et <code>longitude</code>.</li>
+                <li><strong>RMI (Restaurants) :</strong> Contacte l'annuaire local sur le port <code>1099</code> via <code>Naming.lookup()</code> et appelle de manière transparente les méthodes de l'interface partagée.</li>
+            </ul>
+        </section>
+
+        <section class="cr-section">
+            <h2>2. Partie RMI et Réservation de Restaurant</h2>
+
+            <p>Java RMI permet à deux programmes Java, s'exécutant sur des machines différentes, de s'appeler mutuellement. Le serveur proxy appelle une méthode Java, et RMI se charge de la sérialisation, la transmission, et l'exécution sur le véritable objet cible.</p>
+
+            <p>Du point de vue du code appelant, la complexité réseau est invisible. L'appelant travaille avec un <strong>stub</strong> obtenu en interrogeant le registre RMI (port 1099).</p>
+
+            <h3>2.1 Organisation du code RMI</h3>
+            <p>Le code RMI est structuré en quatre couches distinctes :</p>
+            <pre class="code-block">
+┌────────────────────────────────────────┐
+│     Interfaces Distantes (Contrat)     │
+└───────────────────┬────────────────────┘
+                    ▼
+┌────────────────────────────────────────┐
+│            Implémentations             │
+└───────────────────┬────────────────────┘
+                    ▼
+┌────────────────────────────────────────┐
+│          Services Appli (Logique)      │
+└───────────────────┬────────────────────┘
+                    ▼
+┌────────────────────────────────────────┐
+│          Couche DAO (Données)          │
+└────────────────────────────────────────┘
+</pre>
+
+            <h3>2.2 Les interfaces distantes</h3>
+            <ul class="cr-list">
+                <li><strong>ServiceRestaurant :</strong> Déclare <code>getRestaurants()</code>, <code>getTables()</code>, <code>creerReservation()</code> et <code>getReservations()</code>. Le choix de retourner des chaînes JSON rend le proxy indépendant des types métier.</li>
+                <li><strong>ServiceDistributeur :</strong> Gère l'enregistrement centralisé (check-in) via <code>enregistrerClient()</code>.</li>
+            </ul>
+
+            <h3>2.3 Démarrage des serveurs RMI</h3>
+            <pre class="code-block">
+Step 1: [LancerServiceCentral] (Port 1099)
+          -> Crée le registre & Publie "RMI.rmi.ServiceCentral"
+                                    ▲
+Step 2: [LancerServiceRestaurant] ──┘
+          -> S'enregistre auprès du Central (Check-in)
+</pre>
+
+            <h3>2.4 Flux Frontend & Formulaire</h3>
+            <ul class="cr-list">
+                <li><strong>Interception :</strong> Le JS intercepte la soumission, encode les valeurs et effectue un <code>fetch()</code> en GET vers le proxy.</li>
+                <li><strong>Traitement RMI :</strong> Le proxy invoque <code>creerReservation()</code> sur le stub. Le serveur métier instancie la réservation, puis la couche DAO effectue l'insertion transactionnelle.</li>
+                <li><strong>Notification UX :</strong> Une notification (verte ou rouge) s'affiche dynamiquement sans bloquer l'interface via <code>alert()</code>.</li>
+            </ul>
+        </section>
+
+        <section class="cr-section">
+            <h2>3. Couche d'Accès aux Données (BDD)</h2>
+
+            <p>Cette partie constitue le fondement de la persistance des données et de leur manipulation sécurisée sous Oracle.</p>
+
+            <h3>3.1 Modélisation de la Base de Données</h3>
+            <ul class="cr-list">
+                <li><strong>Clients :</strong> ID, Nom, Prénom, Numéro de Téléphone. <em>(Note : Le numéro de téléphone est stocké en String pour préserver les zéros initiaux et éviter les erreurs d'octal Java).</em></li>
+                <li><strong>Restaurants & Tables :</strong> Détails des établissements et de leurs tables (liés par la clé étrangère IDRES).</li>
+                <li><strong>Réservations :</strong> Liées aux clients et aux tables, gérant les convives, la durée et l'horodatage.</li>
+            </ul>
+
+            <div class="tech-tags">
+                <span class="tech-badge db">Base de données Oracle</span>
+                <span class="tech-badge db">Transactions JDBC</span>
+            </div>
+
+            <h3>3.2 Modèle Transactionnel</h3>
+            <ul class="cr-list">
+                <li><strong>Transactions Atomiques :</strong> Chaque modification est atomique. Soit tout est complété (<code>COMMIT</code>), soit rien ne l'est (<code>ROLLBACK</code>). Cela prévient les états incohérents.</li>
+                <li><strong>Détection de Conflits :</strong> Un mécanisme dans la méthode <code>addReservation</code> prévient les chevauchements sur une même table via une requête SQL de vérification préalable.</li>
+            </ul>
+        </section>
+
+    </div> </main>
+
+</body>
+</html>
