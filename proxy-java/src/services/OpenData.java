@@ -101,8 +101,10 @@ public class OpenData {
 
     /**
      * Permet de réserver une table dans un restaurant
-     * @param idRestaurant id du restaurant
-     * @param idClient id du client
+     * @param idTable l'identifiant de la table à réserver
+     * @param nom le nom du client
+     * @param prenom le prénom du client
+     * @param num le numéro de téléphone du client
      * @param nbPers nombre de personnes
      * @return un message de confirmation ou d'erreur
      * @throws Exception
