@@ -2,6 +2,7 @@ var latitude = 48.692054;
 var longitude = 6.184417;
 var zoom = 14;
 var map = L.map('map').setView([latitude, longitude], zoom);
+
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -28,20 +29,13 @@ const restaurantIcon = L.divIcon({
     popupAnchor: [0, -10]
 });
 
-const contractName = "nancy";
-const apiKey = "ccff3ae3c87530ebf6054e6b9b2dc66bec0a4fee";
-const urlAPI = `https://api.jcdecaux.com/vls/v1/stations?contract=${contractName}&apiKey=${apiKey}`;
-const urlRestaurants = 'http://localhost:8080/api/restaurants';
-
-const urlIncidents = 'http://localhost:8080/api/incidents';
-const urlReservation = 'http://localhost:8080/api/reservations';
 const formulaire = document.querySelector('.booking-form');
 
 const velibGroup = L.layerGroup().addTo(map);
 const restoGroup = L.layerGroup().addTo(map);
 const incidentGroup = L.layerGroup().addTo(map);
 
-fetch(urlAPI).then(response => response.json()).then(data => {
+fetch(CONFIG.URL_VELIB).then(response => response.json()).then(data => {
     data.forEach(station => {
         const marker = L.marker([station.position.lat, station.position.lng], {icon: velibIcon}).addTo(velibGroup);
         const popupContent = `
@@ -57,7 +51,7 @@ fetch(urlAPI).then(response => response.json()).then(data => {
     console.error("Erreur lors de la récupération des données vélos :", error);
 });
 
-fetch(urlIncidents).then(response => response.json()).then(data => {
+fetch(`${CONFIG.API_BASE_URL}/incidents`).then(response => response.json()).then(data => {
     data.forEach(incident => {
         const marker = L.marker([incident.latitude, incident.longitude], {icon: incidentIcon}).addTo(incidentGroup);
 
@@ -69,11 +63,10 @@ fetch(urlIncidents).then(response => response.json()).then(data => {
     console.error("Erreur lors de la récupération des incidents :", error);
 });
 
-const urlTables = 'http://localhost:8080/api/tables';
 
 Promise.all([
-    fetch(urlRestaurants).then(res => res.json()),
-    fetch(urlTables).then(res => res.json())
+    fetch(`${CONFIG.API_BASE_URL}/restaurants`).then(res => res.json()),
+    fetch(`${CONFIG.API_BASE_URL}/tables`).then(res => res.json())
 ]).then(([restaurants, tables]) => {
     
     restaurants.forEach(restaurant => {
@@ -84,7 +77,6 @@ Promise.all([
 
             const marker = L.marker([lat, lng], {icon: restaurantIcon}).addTo(restoGroup);
 
-            console.log(tables);
             const restaurantTables = tables.filter(table => table.idRes === restaurant.id);
 
             let tablesHtml = "";
@@ -152,7 +144,7 @@ formulaire.addEventListener('submit', function(event) {
     const date  = document.getElementById('date').value;
     const duree  = document.getElementById('duree').value;
 
-    const url = `http://localhost:8080/api/reservations?idTable=${encodeURIComponent(idTable)}&Nom=${encodeURIComponent(nom)}&Prenom=${encodeURIComponent(prenom)}&NumTel=${encodeURIComponent(numTel)}&nbPers=${nbPers}&duree=${encodeURIComponent(duree)}&dateReservation=${encodeURIComponent(date)}`;
+    const url = `${CONFIG.API_BASE_URL}/reservations?idTable=${encodeURIComponent(idTable)}&Nom=${encodeURIComponent(nom)}&Prenom=${encodeURIComponent(prenom)}&NumTel=${encodeURIComponent(numTel)}&nbPers=${nbPers}&duree=${encodeURIComponent(duree)}&dateReservation=${encodeURIComponent(date)}`;
 
     fetch(url)
         .then(response => response.json())
