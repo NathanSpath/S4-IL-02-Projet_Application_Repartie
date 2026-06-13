@@ -24,7 +24,7 @@
         <div class="cr-header">
             <h1>Comptes Rendus — Projet Application Répartie</h1>
             <div class="cr-meta">
-                <span><strong>Équipe :</strong> Nathan Spath (Proxy), Enzo Marchal & Julien Vincent (RMI), Arthur (BDD), Matthieu Cabot(Web)</span>
+                <span><strong>Équipe :</strong> Nathan Spath (Proxy), Enzo Marchal & Julien Vincent (RMI), Arthur (BDD), Matthieu Cabot (Web)</span>
                 <span><strong>Année :</strong> 2025 - 2026</span>
             </div>
         </div>
@@ -149,6 +149,65 @@ Step 2: [LancerServiceRestaurant] ──┘
             </ul>
         </section>
 
+        <section class="cr-section">
+            <h2>Front-End</h2>
+            <p>Le Front-End de l'application a été conçu de manière native (Vanilla JavaScript, HTML5, CSS3).</p>
+
+            <h3>4.1 Architecture Globale et Choix Techniques</h3>
+            <p>LLes technologies clés utilisées sont :</p>
+            <ul class="cr-list">
+                <li><strong>Leaflet.js & OpenStreetMap :</strong> Moteur cartographique open-source léger pour l'affichage et la manipulation de la carte interactive.</li>
+                <li><strong>Fetch API :</strong> Utilisation native des promesses JavaScript pour la communication asynchrone avec les différentes API.</li>
+                <li><strong>CSS</strong></li>
+            </ul>
+
+            <h3>4.2 Interface Utilisateur</h3>
+            <p>L'interface a été pensée pour être intuitive et diviser clairement l'information. La Direction Artistique s'appuie sur une palette de couleurs stricte définie via des variables CSS.</p>
+            
+            <ul class="cr-list">
+                <li><strong>La page principale :</strong> Divisée via <code>Flexbox</code> entre un panneau latéral contenant les actions utilisateur (formulaire, légende, filtres) et un conteneur dynamique pour la carte.</li>
+                <li><strong>La page des réservations :</strong> Utilise <code>CSS Grid</code> pour afficher de manière adaptative une liste de cartes d'information, générant automatiquement autant de colonnes que l'écran le permet.</li>
+            </ul>
+
+            <div class="tech-tags" style="margin-bottom: 20px;">
+                <span class="tech-badge" style="background-color: var(--teal); color: var(--cream);">Vert sarcelle (#335C67)</span>
+                <span class="tech-badge" style="background-color: var(--cream); color: var(--burgundy); border: 1px solid var(--teal);">Crème (#FFF3B0)</span>
+                <span class="tech-badge" style="background-color: var(--orange); color: var(--burgundy);">Orange (#e09f3e)</span>
+                <span class="tech-badge" style="background-color: var(--red); color: var(--cream);">Rouge (#9E2A2B)</span>
+                <span class="tech-badge" style="background-color: var(--burgundy); color: var(--cream);">Bordeaux (#540b0e  )</span>
+            </div>
+
+            <h3>4.3 Gestion de la Carte Interactive et des Marqueurs</h3>
+            <p>La carte interactive est le cœur de l'application. Sa gestion a été optimisée pour éviter les surcharges visuelles :</p>
+            
+            <ul class="cr-list">
+                <li><strong>Personnalisation des icônes :</strong> Les marqueurs sont générés en HTML/CSS directement par Leaflet (<code>L.divIcon</code>) et ainsi respecter les couleurs choisie pour le site.</li>
+                <li><strong>Filtres dynamiques :</strong> Les marqueurs sont rangés dans des calques invisibles (<code>Layer Groups</code>). Cela permet d'afficher ou masquer des catégories entières sans refaire de requêtes réseau.</li>
+                <li><strong>Popups :</strong> Chaque marqueur possède une bulle d'information générée au clic, combinant du texte, des données et des boutons d'action.</li>
+            </ul>
+
+            <h3>4.4 Utilisation des API</h3>
+            <p>Le Front-End centralise les données provenant de multiples sources de manière asynchrone afin de ne jamais bloquer l'interface utilisateur.</p>
+            
+            <ul class="cr-list" style="margin-bottom: 0;">
+                <li><strong>Temps Réel :</strong> Récupération du statut des stations VélOstan'lib (API JCDecaux).</li>
+                <li><strong>Backend REST :</strong> Communication avec le serveur Proxy Java local pour récupérer les incidents, restaurants et tables.</li>
+                <li><strong>Optimisation (Promise.all) :</strong> Téléchargement en parallèle des restaurants et des tables pour éviter la surcharge réseau, puis croisement des données en mémoire côté client.</li>
+            </ul>
+
+            <h3>4.5 Logique Métier et Expérience Utilisateur</h3>
+            <p>La logique JavaScript a été séparée en plusieurs fichiers (un par page) pour éviter les erreurs d'exécution sur des éléments HTML inexistants et rendre le code maintenable.</p>
+            
+            <ul class="cr-list">
+                <li><strong>Pré-remplissage du formulaire :</strong> Un bouton "Choisir" dans le popup de la carte permet d'injecter automatiquement l'ID de la table et les couverts dans le formulaire de réservation.</li>
+            </ul>
+
+            <div class="architecture-box">
+                <img src="../CR/Schema_indexhtml.jpg" alt="Schéma du début de conception de la page index.html" style="max-width: 100%; height: auto; border-radius: 6px;">
+            </div>
+            <p>Ce schéma illustre la conception initiale de la page <code>index.html</code>.</p>
+
+        </section>
     </div> </main>
 
 </body>

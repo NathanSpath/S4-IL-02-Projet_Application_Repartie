@@ -386,3 +386,8 @@ main.page-reservations {
     margin: 15px 0;
     opacity: 0.6;
 }
+
+code {
+    color: var(--teal);
+
+}
