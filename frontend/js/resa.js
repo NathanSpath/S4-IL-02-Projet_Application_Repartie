@@ -4,7 +4,7 @@ const urlTables = 'http://localhost:8080/api/tables';
 
 
 const reservationsContainer = document.getElementById('reservations-container');
-
+//Affichaeg des réservations
 Promise.all([
     fetch(urlReservation).then(res => res.json()),
     fetch(urlRestaurants).then(res => res.json()),
@@ -17,16 +17,34 @@ Promise.all([
                 return;
             }
             reservations.forEach(resa => {
+        
+            const date = new Date(resa.dateReservation).toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            let nomRestaurant = "Restaurant inconnu";
+            let numTableAffiche = resa.idTab;
+            const tableTrouvee = tables.find(t => t.id === resa.idTab);
+            
+            if (tableTrouvee) {
+                numTableAffiche = tableTrouvee.numTable; 
+                const restoTrouve = restaurants.find(r => r.id === tableTrouvee.idRes);
+                if (restoTrouve) {
+                    nomRestaurant = restoTrouve.name;
+                }
+            }
+
                 const card = document.createElement('div');
                 card.className = 'reservation-card'; 
                 card.innerHTML = `
-                    <h3>Réservation Numéro : ${resa.id}</h3>
-                    <p><strong>Téléphone :</strong> ${resa.numTel || resa.NumTel}</p>
-                    <p><strong>Date :</strong> ${resa.dateReservation}</p>
-                    <p><strong>Durée :</strong> ${resa.duree}</p>
-                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid #ccc;">
-                    <p><strong>Table n° :</strong> ${resa.idTable}</p>
-                    <p><strong>Couverts :</strong> ${resa.nbPers}</p>
+                    <h3>${nomRestaurant}</h3>
+                    <p><strong>Réservation n° :</strong> ${resa.id}</p>
+                    <p><strong>Date :</strong> ${date}</p>
+                    <p><strong>Durée :</strong> ${resa.duree} h</p>
+                    <p><strong>Table :</strong> ${numTableAffiche}</p>
+                    <p><strong>Couverts :</strong> ${resa.nbConvives}</p>
                 `;
                 
                 reservationsContainer.appendChild(card);

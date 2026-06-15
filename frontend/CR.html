@@ -190,7 +190,7 @@ Step 2: [LancerServiceRestaurant] ──┘
             <p>Le Front-End centralise les données provenant de multiples sources de manière asynchrone afin de ne jamais bloquer l'interface utilisateur.</p>
             
             <ul class="cr-list" style="margin-bottom: 0;">
-                <li><strong>Temps Réel :</strong> Récupération du statut des stations VélOstan'lib (API JCDecaux).</li>
+                <li><strong>Vélos :</strong> Utilisation de l'API publique <strong>GBFS (Cyclocity)</strong>. Ainsi le front-end télécharge et fusionne ces deux fichiers : les données géographiques fixes (<code>station_information</code>) et les disponibilités en temps réel (<code>station_status</code>).</li>                
                 <li><strong>Backend REST :</strong> Communication avec le serveur Proxy Java local pour récupérer les incidents, restaurants et tables.</li>
                 <li><strong>Optimisation (Promise.all) :</strong> Téléchargement en parallèle des restaurants et des tables pour éviter la surcharge réseau, puis croisement des données en mémoire côté client.</li>
             </ul>
