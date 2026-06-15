@@ -1,7 +1,7 @@
-var latitude = 48.692054;
-var longitude = 6.184417;
-var zoom = 14;
-var map = L.map('map').setView([latitude, longitude], zoom);
+const latitude = 48.692054;
+const longitude = 6.184417;
+const zoom = 14;
+const map = L.map('map').setView([latitude, longitude], zoom);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -35,22 +35,30 @@ const velibGroup = L.layerGroup().addTo(map);
 const restoGroup = L.layerGroup().addTo(map);
 const incidentGroup = L.layerGroup().addTo(map);
 
-fetch(CONFIG.URL_VELIB).then(response => response.json()).then(data => {
-    data.forEach(station => {
-        const marker = L.marker([station.position.lat, station.position.lng], {icon: velibIcon}).addTo(velibGroup);
-        const popupContent = `
-            <b>${station.name}</b><br>
-            Adresse: ${station.address}<br>
-            Statut: ${station.status}<br>
-            Vélo disponibles: ${station.available_bikes}<br>
-            Emplacements disponibles: ${station.available_bike_stands}
-        `;
-        marker.bindPopup(popupContent);
+// Récupération des données Velib depuis l'API GBFS
+Promise.all([
+    fetch(CONFIG.URL_VELIB_INFO).then(res => res.json()),
+    fetch(CONFIG.URL_VELIB_STATUS).then(res => res.json())
+]).then(([infoData, statusData]) => {
+        const stationsInfo = infoData.data.stations;
+    const stationsStatus = statusData.data.stations;
+    stationsInfo.forEach(station => {
+        const status = stationsStatus.find(s => s.station_id === station.station_id);
+        if (status) {
+            const marker = L.marker([station.lat, station.lon], {icon: velibIcon}).addTo(velibGroup);
+            const popupContent = `
+                <b>${station.name}</b><br>
+                Vélo disponibles: ${status.num_bikes_available}<br>
+                Emplacements disponibles: ${status.num_docks_available}
+            `;
+            marker.bindPopup(popupContent);
+        }
     });
 }).catch(error => {
     console.error("Erreur lors de la récupération des données vélos :", error);
 });
 
+// Récupération des incidents depuis l'API
 fetch(`${CONFIG.API_BASE_URL}/incidents`).then(response => response.json()).then(data => {
     data.forEach(incident => {
         const marker = L.marker([incident.latitude, incident.longitude], {icon: incidentIcon}).addTo(incidentGroup);
@@ -64,6 +72,7 @@ fetch(`${CONFIG.API_BASE_URL}/incidents`).then(response => response.json()).then
 });
 
 
+// Récupération des restaurants et des tables depuis l'API
 Promise.all([
     fetch(`${CONFIG.API_BASE_URL}/restaurants`).then(res => res.json()),
     fetch(`${CONFIG.API_BASE_URL}/tables`).then(res => res.json())
@@ -109,6 +118,8 @@ Promise.all([
     console.error("Erreur lors de la récupération des restaurants ou des tables :", error);
 });
 
+
+// Ensemble des listener d'événements pour les checkboxes
 document.getElementById('velibCheckbox').addEventListener('change', function(e) {
     if (e.target.checked) {
         map.addLayer(velibGroup);
@@ -165,6 +176,7 @@ formulaire.addEventListener('submit', function(event) {
         });
 });
 
+//méthode pour afficher un popup de notification après une réservation
 function afficherPopup(message, type) {
     const existing = document.getElementById('popup-reservation');
     if (existing) existing.remove();
@@ -195,6 +207,7 @@ function afficherPopup(message, type) {
     }, 3000);
 }
 
+//Méthode pour pré-remplir le formulaire de réservation avec les informations de la table sélectionnée
 function preRemplirFormulaire(idTable, nbCouverts) {
     document.getElementById('table').value = idTable;
     document.getElementById('couverts').value = nbCouverts;
